@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getPublishedRoms } from "@/lib/public-data";
 
 // Cadangan bila tabel Rom kosong/gagal: beranda tidak boleh kehilangan pitanya.
@@ -51,11 +52,12 @@ export async function RomMarquee() {
             >
               {roms.map((rom) => (
                 <li key={rom.name} className="flex items-center gap-3.5">
-                  <img
+                  <Image
                     src={rom.logo}
                     alt={`Logo ${rom.name}`}
                     width={96}
                     height={96}
+                    sizes="96px"
                     className="h-20 w-20 shrink-0 rounded-xl bg-white object-contain ring-1 ring-white/20 md:h-24 md:w-24"
                   />
                   <span className="whitespace-nowrap text-[13px] font-semibold uppercase tracking-[0.12em] text-[var(--color-primary)]">

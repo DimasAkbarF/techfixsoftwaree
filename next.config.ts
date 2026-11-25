@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   experimental: {
     // Impor ikon per-simbol, bukan seluruh paket, agar bundle klien kecil.
     optimizePackageImports: ["@tabler/icons-react"],
+    inlineCss: true,
   },
   async headers() {
     return [

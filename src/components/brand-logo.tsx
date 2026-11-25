@@ -17,6 +17,7 @@ export function BrandLogo({
       width={1378}
       height={360}
       priority={priority}
+      fetchPriority={priority ? "high" : undefined}
       // Logo tampil maksimal ~160 px; tanpa sizes next/image meminta varian 3840 px.
       sizes="160px"
       className={`w-auto ${className}`}

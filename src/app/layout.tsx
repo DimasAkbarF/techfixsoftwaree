@@ -36,6 +36,34 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
+  keywords: [
+    "servis software android",
+    "jasa root android",
+    "jasa unbrick android",
+    "fix bootloop android",
+    "flash firmware android",
+    "install custom rom",
+    "unlock bootloader",
+    "downgrade android",
+    "servis hp remote",
+    "servis android rangkasbitung",
+    "techfixsoftware",
+  ],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    other: {
+      "msvalidate.01": "EC630AC9AE8193380276A1EB46EA62FE",
+    },
+  },
   openGraph: {
     type: "website",
     locale: "id_ID",

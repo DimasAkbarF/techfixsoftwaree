@@ -26,9 +26,9 @@ import {
 export const revalidate = 300;
 
 export const metadata: Metadata = pageSeo({
-  title: "Servis Software Android Remote — TechFixSoftware",
+  title: "Jasa Servis Software Android Remote & Rangkasbitung — TechFixSoftware",
   description:
-    "Servis software Android remote & Rangkasbitung: bootloop, brick, stuck logo, flash firmware, root, dan downgrade. Konsultasi WhatsApp, harga disepakati dulu.",
+    "Jasa servis software Android remote seluruh Indonesia & Rangkasbitung: fix bootloop, unbrick, stuck logo, flash firmware, root, custom ROM, unlock bootloader, dan downgrade. Konsultasi WhatsApp, harga disepakati dulu.",
   path: "/",
 });
 
@@ -73,7 +73,7 @@ export default async function Home() {
           <div className="relative z-[2] mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-10 px-4 pb-24 pt-28 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:pb-24 lg:pt-[calc(118*var(--u))]">
             <div className="lg:col-span-7">
               <p className="hero-reveal font-medium uppercase tracking-[0.045em] text-[#1fdcf2] text-[13px] lg:text-[clamp(13px,calc(14.5*var(--u)),16px)]">
-                Servis software Android &middot; remote &amp; Rangkasbitung
+                Jasa Servis Software Android &middot; Konsultasi &amp; Estimasi Transparan
               </p>
               <h1 className="hero-reveal hero-reveal-1 mt-4 font-heading text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.03em] md:text-[3.5rem] lg:text-[clamp(2.75rem,calc(65*var(--u)),4.25rem)] lg:leading-[0.97]">
                 <span className="bg-[linear-gradient(180deg,#ffffff_0%,#ffffff_45%,#c3c6cc_100%)] bg-clip-text text-transparent">
@@ -132,14 +132,12 @@ export default async function Home() {
                   </dd>
                 </div>
                 <div className="mt-6 border-t border-white/20 pt-6">
-                  <div className="border-l-[3px] border-[#1fdcf2] pl-4">
-                    <dt className="text-[13px] font-medium uppercase tracking-[0.13em] text-[#cfd5de]">
-                      Tanpa toko fisik
-                    </dt>
-                    <dd className="mt-2 text-sm leading-relaxed text-[#e9ecf0]">
-                      Device tidak perlu dikirim sebelum harga dan cara pengerjaan disepakati.
-                    </dd>
-                  </div>
+                  <dt className="border-l-[3px] border-[#1fdcf2] pl-4 text-[13px] font-medium uppercase tracking-[0.13em] text-[#cfd5de]">
+                    Tanpa toko fisik
+                  </dt>
+                  <dd className="border-l-[3px] border-[#1fdcf2] pl-4 pt-2 text-sm leading-relaxed text-[#e9ecf0]">
+                    Device tidak perlu dikirim sebelum harga dan cara pengerjaan disepakati.
+                  </dd>
                 </div>
               </dl>
             </aside>
