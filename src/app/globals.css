@@ -1,0 +1,306 @@
+@import "tailwindcss";
+
+:root {
+  /* Netral = 90% antarmuka. Di-tint teal agar tidak putih, tetap menahan navy + teal logo. */
+  --color-bg: #E8EEED;
+  --color-surface: #FBFDFC;
+  --color-fg: #0B1220;        /* navy logo */
+  --color-muted: #5B6576;     /* abu logo */
+  --color-border: #E1E7EC;
+
+  /* Brand diturunkan dari logo resmi: navy #0B1220, teal #0D9488, abu #5B6576. */
+  --color-primary: #0B1220;   /* teks kuat, header, hero, tombol admin */
+  --color-secondary: #0369A1; /* biru langit gelap yang lolos kontras teks */
+  --color-accent: #0277BD;    /* CTA & state aktif — biru selaras teks Hero "Android", kontras 4,93:1 dengan putih */
+  --color-success: #1F7A4D;
+  --color-warning: #A15C07;
+  --color-danger: #B3261E;
+
+  --radius: 6px;
+
+  /* Font di-self-host lewat next/font (layout.tsx); tanpa request ke Google. */
+  --font-heading: var(--font-plus-jakarta), system-ui, sans-serif;
+  --font-sans: var(--font-ibm-plex-sans), system-ui, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, monospace;
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-fg: var(--color-fg);
+  --color-muted: var(--color-muted);
+  --color-border: var(--color-border);
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-danger: var(--color-danger);
+
+  --font-heading: var(--font-heading);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+}
+
+/* Kanvas konten publik: meneruskan karakter gradien hero ke seluruh halaman.
+   .page-canvas = kelanjutan terang (#c6d0d5 → #d5dee2 → #e2e9ec → #edf2f3 →
+   #f7f9fa → #fbfdfc → #ffffff) untuk halaman internal;
+   .page-canvas-hero = kanvas penuh beranda dari hero gelap hingga footer terang
+   secara monoton tanpa sambungan blok. */
+.page-canvas {
+  --color-border: rgba(11, 18, 32, 0.12);
+  --color-muted: #46515a;
+  --color-secondary: #064E75;
+  min-height: 100vh;
+  background-color: #ffffff;
+  background-image:
+    radial-gradient(85% 620px at 104% 0%, rgba(255, 255, 255, 0.42) 0%, rgba(226, 233, 236, 0.16) 44%, rgba(198, 208, 213, 0) 72%),
+    linear-gradient(
+      172deg,
+      #b9c5cb 0%,
+      #c6d0d5 14%,
+      #d5dee2 30%,
+      #e2e9ec 46%,
+      #edf2f3 62%,
+      #f7f9fa 78%,
+      #fbfdfc 90%,
+      #ffffff 100%
+    );
+  background-repeat: no-repeat;
+  overflow-x: clip;
+}
+
+.page-canvas-hero {
+  --color-border: rgba(11, 18, 32, 0.12);
+  --color-muted: #46515a;
+  --color-secondary: #064E75;
+  min-height: 100vh;
+  background-color: #ffffff;
+  background-image:
+    radial-gradient(85% 820px at 105% calc(100svh + 460px), rgba(226, 233, 236, 0.2) 0%, rgba(185, 197, 203, 0.08) 45%, rgba(34, 44, 53, 0) 72%),
+    linear-gradient(
+      176deg,
+      #05070b 0%,
+      #05070b 62svh,
+      #0a1017 76svh,
+      #121a22 88svh,
+      #222c35 100svh,
+      #34404a calc(100svh + 110px),
+      #46515a calc(100svh + 190px),
+      #6f7b83 calc(100svh + 235px),
+      #8d979e calc(100svh + 275px),
+      #b9c5cb calc(100svh + 315px),
+      #c6d0d5 calc(100svh + 365px),
+      #d5dee2 min(54%, max(38%, calc(100svh + 520px))),
+      #e2e9ec min(64%, max(50%, calc(100svh + 760px))),
+      #edf2f3 min(74%, max(62%, calc(100svh + 1020px))),
+      #f7f9fa min(84%, max(76%, calc(100svh + 1300px))),
+      #fbfdfc min(94%, max(89%, calc(100svh + 1580px))),
+      #ffffff 100%
+    );
+  background-repeat: no-repeat;
+  overflow-x: clip;
+}
+
+@media (max-width: 1023px) {
+  .page-canvas-hero {
+    background-image:
+      radial-gradient(90% 720px at 105% calc(100svh + 560px), rgba(226, 233, 236, 0.18) 0%, rgba(185, 197, 203, 0.08) 45%, rgba(34, 44, 53, 0) 72%),
+      linear-gradient(
+        178deg,
+        #05070b 0%,
+        #05070b 62svh,
+        #0a1017 76svh,
+        #121a22 92svh,
+        #222c35 calc(100svh + 120px),
+        #34404a calc(100svh + 225px),
+        #46515a calc(100svh + 300px),
+        #6f7b83 calc(100svh + 340px),
+        #8d979e calc(100svh + 375px),
+        #b9c5cb calc(100svh + 410px),
+        #c6d0d5 calc(100svh + 455px),
+        #d5dee2 min(54%, max(38%, calc(100svh + 620px))),
+        #e2e9ec min(64%, max(50%, calc(100svh + 880px))),
+        #edf2f3 min(74%, max(62%, calc(100svh + 1160px))),
+        #f7f9fa min(84%, max(76%, calc(100svh + 1460px))),
+        #fbfdfc min(94%, max(89%, calc(100svh + 1760px))),
+        #ffffff 100%
+      );
+  }
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: var(--font-heading);
+}
+
+code, pre, .font-mono {
+  font-family: var(--font-mono);
+}
+
+/* ---------------------------------------------------------------------------
+   Hero beranda: satu bidang gradien hitam → charcoal → putih.
+   ::before = wash gradien yang bergeser sangat lambat, ::after = cahaya melengkung.
+   Mask di bawah meluruhkan tepi hero secara halus ke .page-canvas-hero.
+--------------------------------------------------------------------------- */
+.hero-aurora {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  isolation: isolate;
+  background-color: #05070b;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 58%,
+    rgba(0, 0, 0, 0.82) 72%,
+    rgba(0, 0, 0, 0.45) 85%,
+    rgba(0, 0, 0, 0.14) 94%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 58%,
+    rgba(0, 0, 0, 0.82) 72%,
+    rgba(0, 0, 0, 0.45) 85%,
+    rgba(0, 0, 0, 0.14) 94%,
+    transparent 100%
+  );
+}
+
+.hero-aurora::before {
+  content: "";
+  position: absolute;
+  inset: -22% -12%;
+  z-index: -2;
+  background-image:
+    radial-gradient(85% 95% at 108% 0%, #ffffff 0%, #f7f9fa 14%, #e2e9ec 30%, #b9c5cb 46%, rgba(40, 52, 62, 0) 68%),
+    radial-gradient(55% 50% at 0% 100%, rgba(34, 211, 238, 0.16) 0%, rgba(34, 211, 238, 0) 64%),
+    linear-gradient(102deg, #05070b 0%, #06090e 34%, #0a1017 50%, #121a22 62%, #222c35 72%, #46515a 83%, #8d979e 93%, #c6d0d5 99%, #e6ebee 100%);
+  transform: translate3d(0, 0, 0);
+  animation: hero-drift 48s ease-in-out infinite alternate;
+}
+
+.hero-aurora::after {
+  content: "";
+  position: absolute;
+  right: -18%;
+  bottom: -52%;
+  z-index: -1;
+  width: 66%;
+  height: 110%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 78%);
+  transform: rotate(-14deg);
+  animation: hero-float 34s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes hero-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-2.5%, 1%, 0) scale(1.04);
+  }
+}
+
+@keyframes hero-float {
+  from {
+    transform: translate3d(0, 0, 0) rotate(-14deg) scale(1);
+  }
+  to {
+    transform: translate3d(-3%, 2%, 0) rotate(-10deg) scale(1.05);
+  }
+}
+
+/* Di layar sempit cahaya pindah ke bawah agar teks tetap di area gelap. */
+@media (max-width: 1023px) {
+  .hero-aurora::before {
+    background-image:
+      radial-gradient(110% 60% at 100% 4%, rgba(255, 255, 255, 0.72) 0%, rgba(226, 234, 238, 0.4) 24%, rgba(120, 138, 150, 0.14) 46%, rgba(10, 16, 24, 0) 68%),
+      linear-gradient(178deg, #05070b 0%, #070b11 46%, #0b1219 68%, #131c24 84%, #2a343d 94%, #6f7b83 100%);
+  }
+
+  .hero-aurora::after {
+    right: -34%;
+    bottom: -26%;
+    width: 92%;
+    height: 64%;
+  }
+}
+
+/* Elemen hero muncul sekali saat halaman dibuka; tanpa loop yang mengganggu. */
+.hero-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: hero-reveal 0.8s cubic-bezier(0.22, 0.7, 0.2, 1) forwards;
+}
+
+.hero-reveal-1 {
+  animation-delay: 0.08s;
+}
+
+.hero-reveal-2 {
+  animation-delay: 0.16s;
+}
+
+.hero-reveal-3 {
+  animation-delay: 0.24s;
+}
+
+@keyframes hero-reveal {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-aurora::before,
+  .hero-aurora::after {
+    animation: none;
+  }
+
+  .hero-reveal {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
+/* Pita ROM: tiga salinan daftar digeser tepat selebar satu salinan agar loop mulus. */
+@keyframes rom-marquee {
+  to {
+    /* Pembagian eksak (bukan 33.3333%) supaya tidak ada drift 1–2px per siklus. */
+    transform: translateX(calc(-100% / 3));
+  }
+}
+
+.rom-track {
+  /* Satu siklus ±1500px dalam 30 detik: lambat, tidak menyita perhatian.
+     Sengaja tidak dimatikan oleh prefers-reduced-motion (elemen utama section). */
+  animation: rom-marquee 30s linear infinite;
+}
+
+.rom-mask:hover .rom-track,
+.rom-mask:focus-within .rom-track {
+  animation-play-state: paused;
+}
+
+/* Fade tepi sangat tipis agar logo tidak terpotong keras di tepi layar. */
+.rom-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 3%, #000 97%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 3%, #000 97%, transparent);
+}

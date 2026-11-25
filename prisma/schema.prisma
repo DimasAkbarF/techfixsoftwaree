@@ -1,0 +1,193 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  SCHEDULED
+  DONE
+  CANCELLED
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum LeadActivityKind {
+  STATUS
+  NOTE
+  FOLLOW_UP
+  PRICE
+}
+
+model Service {
+  id             String   @id @default(cuid())
+  name           String
+  slug           String   @unique
+  category       String
+  description    String
+  symptoms       String[] @default([])
+  preparation    String[] @default([])
+  priceFromLabel String   @default("mulai dari Rp50.000")
+  icon           String?
+  sortOrder      Int      @default(0)
+  isPublished    Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  leads          Lead[]
+
+  @@index([category, sortOrder])
+  @@index([isPublished])
+}
+
+model Lead {
+  id          String     @id @default(cuid())
+  name        String
+  // Nullable agar lead lama (sebelum form 4 field) tetap valid; form publik mewajibkan nomor.
+  phone       String?
+  deviceType  String
+  complaint   String
+  serviceId   String?
+  service     Service?   @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  status      LeadStatus @default(NEW)
+  adminNote   String?
+  agreedPrice Int?
+  nextFollowUpAt DateTime?
+  contactedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  activities  LeadActivity[]
+
+  @@index([status, createdAt])
+  @@index([nextFollowUpAt])
+  @@index([serviceId])
+}
+
+model LeadActivity {
+  id        String           @id @default(cuid())
+  leadId    String
+  lead      Lead             @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  kind      LeadActivityKind
+  message   String
+  createdAt DateTime         @default(now())
+
+  @@index([leadId, createdAt])
+}
+
+model Article {
+  id              String        @id @default(cuid())
+  title           String
+  slug            String        @unique
+  content         String
+  coverImageUrl   String?
+  metaTitle       String?
+  metaDescription String?
+  status          ContentStatus @default(DRAFT)
+  publishedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([status, publishedAt])
+}
+
+model Rom {
+  id          String   @id @default(cuid())
+  name        String
+  logoUrl     String
+  sortOrder   Int      @default(0)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished, sortOrder])
+}
+
+model Testimonial {
+  id           String   @id @default(cuid())
+  customerName String
+  deviceType   String
+  review       String
+  rating       Int
+  imageUrl     String?
+  isPublished  Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([isPublished, createdAt])
+}
+
+model SiteSetting {
+  id             String   @id @default("singleton")
+  brandName      String   @default("TechFixSoftware")
+  logoUrl        String?
+  whatsappNumber String?
+  minPriceLabel  String   @default("mulai dari Rp50.000")
+  updatedAt      DateTime @updatedAt
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  @@map("verification")
+}

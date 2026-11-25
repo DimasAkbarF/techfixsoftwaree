@@ -1,0 +1,41 @@
+{
+  "name": "techfixsoftware-scaffold",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "seed:admin": "node scripts/seed-admin.mjs",
+    "seed:services": "node scripts/seed-services.mjs",
+    "seed:articles": "node scripts/seed-articles.mjs",
+    "seed:testimonials": "node scripts/seed-testimonials.mjs",
+    "seed:roms": "node scripts/seed-roms.mjs",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "@tabler/icons-react": "^3.52.0",
+    "@uploadthing/react": "^7.3.3",
+    "better-auth": "^1.7.28",
+    "clsx": "^2.1.1",
+    "next": "15.5.29",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "tailwind-merge": "^3.7.1",
+    "uploadthing": "^7.7.4",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.29",
+    "prisma": "^6.19.3",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
