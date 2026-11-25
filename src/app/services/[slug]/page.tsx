@@ -15,6 +15,7 @@ import { SITE_URL } from "@/lib/site";
 import { ServiceIcon } from "@/components/common/service-icon";
 import { ConsultationForm } from "@/components/public/consultation-form";
 import { PublicHeader } from "@/components/public/public-header";
+import { HeroBackground } from "@/components/public/hero-background";
 import { PublicFooter } from "@/components/public/public-footer";
 import {
   IconChevronRight,
@@ -115,40 +116,46 @@ export default async function ServiceDetailPage({
     <div className="page-canvas min-h-screen">
       <PublicHeader active="katalog" />
 
+      <section className="hero-shell">
+        <HeroBackground />
+        <div className="relative z-[2] mx-auto max-w-[1200px] px-4 pb-12 pt-8">
+          <nav className="mb-6 flex items-center gap-2 text-xs text-[#D7E0E5]">
+            <Link href="/" className="hover:text-white hover:underline">
+              Beranda
+            </Link>
+            <IconChevronRight className="h-3.5 w-3.5 text-white/40" />
+            <Link href="/services" className="hover:text-white hover:underline">
+              Katalog Layanan
+            </Link>
+            <IconChevronRight className="h-3.5 w-3.5 text-white/40" />
+            <span className="font-medium text-white">{service.name}</span>
+          </nav>
+
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--radius)] border border-white/20 bg-[#0d1117]/60">
+              <ServiceIcon name={service.icon} className="h-7 w-7 text-[#38BDF8]" />
+            </div>
+            <div>
+              <span className="rounded-[var(--radius)] bg-white/10 px-2.5 py-0.5 text-xs font-medium text-[#7DD3FC]">
+                {service.category}
+              </span>
+              <h1 className="mt-1 font-heading text-2xl font-bold tracking-tight text-white md:text-3xl">
+                {service.name}
+              </h1>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <main id="main" className="max-w-[1200px] mx-auto px-4 py-8">
         <JsonLd data={serviceLd} />
         <JsonLd data={breadcrumbLd} />
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-xs text-[var(--color-muted)] mb-8">
-          <Link href="/" className="hover:underline">
-            Beranda
-          </Link>
-          <IconChevronRight className="w-3.5 h-3.5 text-[var(--color-border)]" />
-          <Link href="/services" className="hover:underline">
-            Katalog Layanan
-          </Link>
-          <IconChevronRight className="w-3.5 h-3.5 text-[var(--color-border)]" />
-          <span className="text-[var(--color-fg)] font-medium">{service.name}</span>
-        </nav>
 
         {/* Split 8 / 4 Layout (DESIGN.md §6) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Main Content (Col 8/12) */}
           <div className="lg:col-span-8 space-y-8">
             <div className="border-b border-[var(--color-border)] pb-6">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 rounded-[var(--radius)] border border-[var(--color-border)] flex items-center justify-center bg-[var(--color-surface)]/70 shrink-0">
-                  <ServiceIcon name={service.icon} className="w-7 h-7 text-[var(--color-accent)]" />
-                </div>
-                <div>
-                  <span className="text-xs px-2.5 py-0.5 rounded-[var(--radius)] bg-[var(--color-surface)]/75 text-[var(--color-secondary)] font-medium">
-                    {service.category}
-                  </span>
-                  <h1 className="font-heading text-2xl md:text-3xl font-bold tracking-tight text-[var(--color-primary)] mt-1">
-                    {service.name}
-                  </h1>
-                </div>
-              </div>
               <p className="text-base text-[var(--color-muted)] leading-relaxed mt-4">
                 {service.description}
               </p>

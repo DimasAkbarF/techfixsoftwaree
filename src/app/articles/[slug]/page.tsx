@@ -10,6 +10,7 @@ import { parseArticleBlocks } from "@/lib/article-blocks";
 import { pickRelatedArticles, pickRelatedServicesForArticle } from "@/lib/related-content";
 import { Button } from "@/components/ui/button";
 import { PublicHeader } from "@/components/public/public-header";
+import { HeroBackground } from "@/components/public/hero-background";
 import { PublicFooter } from "@/components/public/public-footer";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumb, clip, pageSeo, SITE_NAME } from "@/lib/seo";
@@ -122,29 +123,27 @@ export default async function ArticleDetailPage({
     <div className="page-canvas min-h-screen">
       <PublicHeader active="artikel" />
 
-      <main id="main" className="max-w-[800px] mx-auto px-4 py-10">
-        <JsonLd data={articleLd} />
-        <JsonLd data={breadcrumbLd} />
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-xs text-[var(--color-muted)] mb-8">
-          <Link href="/" className="hover:underline">
-            Beranda
-          </Link>
-          <IconChevronRight className="w-3.5 h-3.5 text-[var(--color-border)]" />
-          <Link href="/articles" className="hover:underline">
-            Artikel
-          </Link>
-          <IconChevronRight className="w-3.5 h-3.5 text-[var(--color-border)]" />
-          <span className="text-[var(--color-fg)] font-medium truncate max-w-[200px] sm:max-w-none">
-            {article.title}
-          </span>
-        </nav>
+      <section className="hero-shell">
+        <HeroBackground />
+        <div className="relative z-[2] mx-auto max-w-[800px] px-4 pb-12 pt-8">
+          <nav className="mb-6 flex items-center gap-2 text-xs text-[#D7E0E5]">
+            <Link href="/" className="hover:text-white hover:underline">
+              Beranda
+            </Link>
+            <IconChevronRight className="h-3.5 w-3.5 text-white/40" />
+            <Link href="/articles" className="hover:text-white hover:underline">
+              Artikel
+            </Link>
+            <IconChevronRight className="h-3.5 w-3.5 text-white/40" />
+            <span className="max-w-[200px] truncate font-medium text-white sm:max-w-none">
+              {article.title}
+            </span>
+          </nav>
 
-        <article className="space-y-6">
-          <header className="space-y-3 pb-6 border-b border-[var(--color-border)]">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--color-muted)] font-mono">
+          <header className="space-y-3">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-[#D7E0E5]">
               <span className="inline-flex items-center gap-2">
-                <IconCalendar className="w-4 h-4" />
+                <IconCalendar className="h-4 w-4 text-[#38BDF8]" />
                 {publishedTime ? (
                   <time dateTime={publishedTime.toISOString()}>
                     {formatTanggal(publishedTime)}
@@ -160,10 +159,18 @@ export default async function ArticleDetailPage({
                 </span>
               )}
             </div>
-            <h1 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-primary)] leading-tight">
+            <h1 className="font-heading text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
               {article.title}
             </h1>
           </header>
+        </div>
+      </section>
+
+      <main id="main" className="max-w-[800px] mx-auto px-4 py-10">
+        <JsonLd data={articleLd} />
+        <JsonLd data={breadcrumbLd} />
+
+        <article className="space-y-6">
 
           {/* Cover Image */}
           {article.coverImageUrl && (

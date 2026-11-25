@@ -16,6 +16,14 @@
   --color-warning: #A15C07;
   --color-danger: #B3261E;
 
+  /* Token background grid teknis global */
+  --bg-base: #0d1117;
+  --grid-line: rgba(255, 255, 255, 0.045);
+  --grid-size: 56px;
+  --glow-cyan: rgba(56, 189, 248, 0.2);
+  --page-bg: #cfd9de;
+  --hero-fade-h: clamp(180px, 26vh, 300px);
+
   --radius: 6px;
 
   /* Font di-self-host lewat next/font (layout.tsx); tanpa request ke Google. */
@@ -57,86 +65,14 @@ body {
    #f7f9fa → #fbfdfc → #ffffff) untuk halaman internal;
    .page-canvas-hero = kanvas penuh beranda dari hero gelap hingga footer terang
    secara monoton tanpa sambungan blok. */
-.page-canvas {
-  --color-border: rgba(11, 18, 32, 0.12);
-  --color-muted: #46515a;
-  --color-secondary: #064E75;
-  min-height: 100vh;
-  background-color: #ffffff;
-  background-image:
-    radial-gradient(85% 620px at 104% 0%, rgba(255, 255, 255, 0.42) 0%, rgba(226, 233, 236, 0.16) 44%, rgba(198, 208, 213, 0) 72%),
-    linear-gradient(
-      172deg,
-      #b9c5cb 0%,
-      #c6d0d5 14%,
-      #d5dee2 30%,
-      #e2e9ec 46%,
-      #edf2f3 62%,
-      #f7f9fa 78%,
-      #fbfdfc 90%,
-      #ffffff 100%
-    );
-  background-repeat: no-repeat;
-  overflow-x: clip;
-}
-
+.page-canvas,
 .page-canvas-hero {
   --color-border: rgba(11, 18, 32, 0.12);
   --color-muted: #46515a;
   --color-secondary: #064E75;
   min-height: 100vh;
-  background-color: #ffffff;
-  background-image:
-    radial-gradient(85% 820px at 105% calc(100svh + 460px), rgba(226, 233, 236, 0.2) 0%, rgba(185, 197, 203, 0.08) 45%, rgba(34, 44, 53, 0) 72%),
-    linear-gradient(
-      176deg,
-      #05070b 0%,
-      #05070b 62svh,
-      #0a1017 76svh,
-      #121a22 88svh,
-      #222c35 100svh,
-      #34404a calc(100svh + 110px),
-      #46515a calc(100svh + 190px),
-      #6f7b83 calc(100svh + 235px),
-      #8d979e calc(100svh + 275px),
-      #b9c5cb calc(100svh + 315px),
-      #c6d0d5 calc(100svh + 365px),
-      #d5dee2 min(54%, max(38%, calc(100svh + 520px))),
-      #e2e9ec min(64%, max(50%, calc(100svh + 760px))),
-      #edf2f3 min(74%, max(62%, calc(100svh + 1020px))),
-      #f7f9fa min(84%, max(76%, calc(100svh + 1300px))),
-      #fbfdfc min(94%, max(89%, calc(100svh + 1580px))),
-      #ffffff 100%
-    );
-  background-repeat: no-repeat;
+  background-color: var(--page-bg);
   overflow-x: clip;
-}
-
-@media (max-width: 1023px) {
-  .page-canvas-hero {
-    background-image:
-      radial-gradient(90% 720px at 105% calc(100svh + 560px), rgba(226, 233, 236, 0.18) 0%, rgba(185, 197, 203, 0.08) 45%, rgba(34, 44, 53, 0) 72%),
-      linear-gradient(
-        178deg,
-        #05070b 0%,
-        #05070b 62svh,
-        #0a1017 76svh,
-        #121a22 92svh,
-        #222c35 calc(100svh + 120px),
-        #34404a calc(100svh + 225px),
-        #46515a calc(100svh + 300px),
-        #6f7b83 calc(100svh + 340px),
-        #8d979e calc(100svh + 375px),
-        #b9c5cb calc(100svh + 410px),
-        #c6d0d5 calc(100svh + 455px),
-        #d5dee2 min(54%, max(38%, calc(100svh + 620px))),
-        #e2e9ec min(64%, max(50%, calc(100svh + 880px))),
-        #edf2f3 min(74%, max(62%, calc(100svh + 1160px))),
-        #f7f9fa min(84%, max(76%, calc(100svh + 1460px))),
-        #fbfdfc min(94%, max(89%, calc(100svh + 1760px))),
-        #ffffff 100%
-      );
-  }
 }
 
 h1, h2, h3, h4, h5, h6, .font-heading {
@@ -148,96 +84,108 @@ code, pre, .font-mono {
 }
 
 /* ---------------------------------------------------------------------------
-   Hero beranda: satu bidang gradien hitam → charcoal → putih.
-   ::before = wash gradien yang bergeser sangat lambat, ::after = cahaya melengkung.
-   Mask di bawah meluruhkan tepi hero secara halus ke .page-canvas-hero.
---------------------------------------------------------------------------- */
-.hero-aurora {
+   HeroBackground & Hero Shell untuk semua halaman publik.
+   --------------------------------------------------------------------------- */
+.hero-shell {
+  position: relative;
+  overflow: hidden;
+  background: #07090d;
+  padding-bottom: calc(var(--hero-fade-h) * 0.5);
+}
+
+.hero-shell::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--hero-fade-h);
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(207, 217, 222, 0) 0%,
+    rgba(207, 217, 222, 0.03) 12%,
+    rgba(207, 217, 222, 0.1) 26%,
+    rgba(207, 217, 222, 0.25) 40%,
+    rgba(207, 217, 222, 0.48) 55%,
+    rgba(207, 217, 222, 0.72) 70%,
+    rgba(207, 217, 222, 0.9) 85%,
+    #cfd9de 100%
+  );
+}
+
+.hero-bg {
   position: absolute;
   inset: 0;
+  pointer-events: none;
+  overflow: hidden;
   z-index: 0;
-  isolation: isolate;
-  background-color: #05070b;
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 58%,
-    rgba(0, 0, 0, 0.82) 72%,
-    rgba(0, 0, 0, 0.45) 85%,
-    rgba(0, 0, 0, 0.14) 94%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 58%,
-    rgba(0, 0, 0, 0.82) 72%,
-    rgba(0, 0, 0, 0.45) 85%,
-    rgba(0, 0, 0, 0.14) 94%,
-    transparent 100%
-  );
 }
 
-.hero-aurora::before {
-  content: "";
+.hero-bg__gradient {
   position: absolute;
-  inset: -22% -12%;
-  z-index: -2;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 40% 90% at -3% 114%, rgba(34,208,247,1) 0%, rgba(34,208,247,.882) 16.7%, rgba(34,208,247,.607) 33.3%, rgba(34,208,247,.325) 50%, rgba(34,208,247,.135) 66.7%, rgba(34,208,247,.044) 83.3%, rgba(34,208,247,.011) 100%),
+    radial-gradient(ellipse 47.4% 85.1% at 74.5% 111.2%, rgba(240,243,248,1) 0%, rgba(240,243,248,.882) 16.7%, rgba(240,243,248,.607) 33.3%, rgba(240,243,248,.325) 50%, rgba(240,243,248,.135) 66.7%, rgba(240,243,248,.044) 83.3%, rgba(240,243,248,.011) 100%),
+    radial-gradient(ellipse 101.7% 30% at 71.8% 103.6%, rgba(240,243,248,1) 0%, rgba(240,243,248,.882) 16.7%, rgba(240,243,248,.607) 33.3%, rgba(240,243,248,.325) 50%, rgba(240,243,248,.135) 66.7%, rgba(240,243,248,.044) 83.3%, rgba(240,243,248,.011) 100%),
+    linear-gradient(90deg, rgba(240,243,248,.011) 51.4%, rgba(240,243,248,.043) 59.4%, rgba(240,243,248,.133) 67.4%, rgba(240,243,248,.319) 75.5%, rgba(240,243,248,.596) 83.5%, rgba(240,243,248,.866) 91.5%, rgba(240,243,248,.982) 99.6%),
+    linear-gradient(90deg, #04070a 0%, #0a0d11 45%, #14181d 100%);
+}
+
+.hero-bg__waves {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-bg__grid-light {
+  position: absolute;
+  inset: 0;
   background-image:
-    radial-gradient(85% 95% at 108% 0%, #ffffff 0%, #f7f9fa 14%, #e2e9ec 30%, #b9c5cb 46%, rgba(40, 52, 62, 0) 68%),
-    radial-gradient(55% 50% at 0% 100%, rgba(34, 211, 238, 0.16) 0%, rgba(34, 211, 238, 0) 64%),
-    linear-gradient(102deg, #05070b 0%, #06090e 34%, #0a1017 50%, #121a22 62%, #222c35 72%, #46515a 83%, #8d979e 93%, #c6d0d5 99%, #e6ebee 100%);
-  transform: translate3d(0, 0, 0);
-  animation: hero-drift 48s ease-in-out infinite alternate;
+    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 80% at 28% 45%, #000 10%, transparent 72%);
+  mask-image: radial-gradient(ellipse 60% 80% at 28% 45%, #000 10%, transparent 72%);
 }
 
-.hero-aurora::after {
-  content: "";
+.hero-bg__grid-dark {
   position: absolute;
-  right: -18%;
-  bottom: -52%;
-  z-index: -1;
-  width: 66%;
-  height: 110%;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 78%);
-  transform: rotate(-14deg);
-  animation: hero-float 34s ease-in-out infinite alternate;
-  pointer-events: none;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(10,15,22,.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10,15,22,.08) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 38% 60% at 100% 45%, #000 20%, transparent 80%);
+  mask-image: radial-gradient(ellipse 38% 60% at 100% 45%, #000 20%, transparent 80%);
 }
 
-@keyframes hero-drift {
-  from {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  to {
-    transform: translate3d(-2.5%, 1%, 0) scale(1.04);
-  }
+.hero-home {
+  --u: calc(100vw / 1456);
 }
 
-@keyframes hero-float {
-  from {
-    transform: translate3d(0, 0, 0) rotate(-14deg) scale(1);
-  }
-  to {
-    transform: translate3d(-3%, 2%, 0) rotate(-10deg) scale(1.05);
+@media (min-width: 901px) {
+  .hero-home {
+    min-height: calc(819 * var(--u));
   }
 }
 
-/* Di layar sempit cahaya pindah ke bawah agar teks tetap di area gelap. */
-@media (max-width: 1023px) {
-  .hero-aurora::before {
-    background-image:
-      radial-gradient(110% 60% at 100% 4%, rgba(255, 255, 255, 0.72) 0%, rgba(226, 234, 238, 0.4) 24%, rgba(120, 138, 150, 0.14) 46%, rgba(10, 16, 24, 0) 68%),
-      linear-gradient(178deg, #05070b 0%, #070b11 46%, #0b1219 68%, #131c24 84%, #2a343d 94%, #6f7b83 100%);
+@media (max-width: 900px) {
+  :root {
+    --hero-fade-h: clamp(120px, 20vh, 200px);
   }
 
-  .hero-aurora::after {
-    right: -34%;
-    bottom: -26%;
-    width: 92%;
-    height: 64%;
+  .hero-bg__grid-light,
+  .hero-bg__grid-dark {
+    background-size: 36px 36px;
+  }
+
+  .hero-bg__waves {
+    transform: scale(0.92);
+    transform-origin: bottom right;
   }
 }
 
@@ -268,11 +216,6 @@ code, pre, .font-mono {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-aurora::before,
-  .hero-aurora::after {
-    animation: none;
-  }
-
   .hero-reveal {
     opacity: 1;
     transform: none;

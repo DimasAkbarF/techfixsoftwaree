@@ -7,6 +7,7 @@ import {
   getPublishedTestimonials,
 } from "@/lib/public-data";
 import { PublicHeader } from "@/components/public/public-header";
+import { HeroBackground } from "@/components/public/hero-background";
 import { PublicFooter } from "@/components/public/public-footer";
 import { RomMarquee } from "@/components/public/rom-marquee";
 import { ConsultationForm } from "@/components/public/consultation-form";
@@ -67,36 +68,45 @@ export default async function Home() {
 
       <main id="main">
         {/* Hero mengisi satu layar penuh; tepi bawah meluruh ke kanvas global tanpa blok pemutus. */}
-        <section className="relative flex min-h-[100svh] items-center overflow-hidden">
-          <div aria-hidden className="hero-aurora" />
-          <div className="relative z-10 mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-12 px-4 pb-28 pt-28 lg:grid-cols-12 lg:gap-16 lg:px-8 lg:pb-24 lg:pt-32">
+        <section className="hero-shell hero-home flex items-center">
+          <HeroBackground />
+          <div className="relative z-[2] mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-10 px-4 pb-24 pt-28 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:pb-24 lg:pt-[calc(118*var(--u))]">
             <div className="lg:col-span-7">
-              <p className="hero-reveal text-[11px] font-semibold uppercase tracking-[0.18em] text-[#38BDF8]">
+              <p className="hero-reveal font-medium uppercase tracking-[0.045em] text-[#1fdcf2] text-[13px] lg:text-[clamp(13px,calc(14.5*var(--u)),16px)]">
                 Servis software Android &middot; remote &amp; Rangkasbitung
               </p>
-              <h1 className="hero-reveal hero-reveal-1 mt-5 font-heading text-[2.5rem] font-bold leading-[1.04] tracking-[-0.03em] text-white md:text-[3.5rem] xl:text-[4rem]">
-                Servis software{" "}
-                <span className="bg-[linear-gradient(100deg,#7DD3FC_0%,#38BDF8_45%,#22D3EE_100%)] bg-clip-text text-transparent">
+              <h1 className="hero-reveal hero-reveal-1 mt-4 font-heading text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.03em] md:text-[3.5rem] lg:text-[clamp(2.75rem,calc(65*var(--u)),4.25rem)] lg:leading-[0.97]">
+                <span className="bg-[linear-gradient(180deg,#ffffff_0%,#ffffff_45%,#c3c6cc_100%)] bg-clip-text text-transparent">
+                  Servis software{" "}
+                </span>
+                <span className="bg-[linear-gradient(90deg,#9af0fa_0%,#33c9f7_50%,#1a9af5_100%)] bg-clip-text text-transparent">
                   Android,
-                </span>{" "}
-                tanpa perlu ke toko.
+                </span>
+                <span className="bg-[linear-gradient(180deg,#ffffff_0%,#ffffff_45%,#c3c6cc_100%)] bg-clip-text text-transparent">
+                  {" "}
+                  tanpa perlu ke toko.
+                </span>
               </h1>
-              <p className="hero-reveal hero-reveal-2 mt-6 max-w-xl text-base leading-relaxed text-[#D7E0E5] lg:text-lg">
+              <p className="hero-reveal hero-reveal-2 mt-6 max-w-xl text-base leading-[1.55] text-[#aeb4bd] lg:text-[clamp(1rem,calc(19.5*var(--u)),1.25rem)] lg:leading-[1.51]">
                 Bootloop, brick, stuck logo, flashing firmware, root, dan downgrade. Konsultasi
-                dulu lewat WhatsApp; harga disepakati sebelum device diserahkan.
+                dulu{" "}
+                <span className="text-[#e9ecf0]">
+                  lewat WhatsApp; harga disepakati sebelum device
+                </span>{" "}
+                diserahkan.
               </p>
 
-              <div className="hero-reveal hero-reveal-3 mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="hero-reveal hero-reveal-3 mt-9 flex flex-col gap-3.5 sm:flex-row sm:items-center">
                 <a
                   href="#konsultasi"
-                  className="inline-flex h-12 items-center justify-center gap-2 rounded-[var(--radius)] border border-[#38BDF8]/40 bg-[var(--color-accent)] px-6 text-sm font-semibold text-white transition-all hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7DD3FC] focus-visible:ring-offset-2 focus-visible:ring-offset-[#06090F]"
+                  className="inline-flex h-[52px] items-center justify-center gap-2 rounded-[14px] bg-[linear-gradient(90deg,#17ddf4_0%,#3aa9ff_100%)] px-6 text-[15px] font-bold text-[#06121c] shadow-[0_8px_28px_rgba(30,200,245,0.28)] transition-all hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7DD3FC] focus-visible:ring-offset-2 focus-visible:ring-offset-[#06090F]"
                 >
                   Konsultasi sekarang
                   <IconArrowRight className="h-4 w-4" />
                 </a>
                 <Link
                   href="/services"
-                  className="inline-flex h-12 items-center justify-center rounded-[var(--radius)] border border-white/35 px-6 text-sm font-semibold text-white transition-colors hover:border-white/60 hover:bg-white/10"
+                  className="inline-flex h-[52px] items-center justify-center rounded-[14px] border-[1.5px] border-white/85 bg-transparent px-6 text-[15px] font-semibold text-white transition-colors hover:bg-white/10"
                 >
                   Lihat katalog layanan
                 </Link>
@@ -104,9 +114,17 @@ export default async function Home() {
             </div>
 
             <aside className="hero-reveal hero-reveal-2 lg:col-span-5 lg:self-center">
-              <dl className="rounded-xl border border-white/25 bg-[#070B12]/45 p-7 backdrop-blur-md">
-                <div className="border-l-2 border-[#22D3EE] pl-4">
-                  <dt className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#9FD8E4]">
+              <dl
+                className="rounded-[16px] border border-white/40 p-7"
+                style={{
+                  background:
+                    "linear-gradient(135deg, rgba(255,255,255,0.14), rgba(120,128,142,0.2))",
+                  backdropFilter: "blur(14px)",
+                  WebkitBackdropFilter: "blur(14px)",
+                }}
+              >
+                <div className="border-l-[3px] border-[#1fdcf2] pl-4">
+                  <dt className="text-[13px] font-medium uppercase tracking-[0.13em] text-[#cfd5de]">
                     Biaya servis
                   </dt>
                   <dd className="mt-2 font-heading text-xl font-semibold text-white">
@@ -114,11 +132,11 @@ export default async function Home() {
                   </dd>
                 </div>
                 <div className="mt-6 border-t border-white/20 pt-6">
-                  <div className="border-l-2 border-[#22D3EE] pl-4">
-                    <dt className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#9FD8E4]">
+                  <div className="border-l-[3px] border-[#1fdcf2] pl-4">
+                    <dt className="text-[13px] font-medium uppercase tracking-[0.13em] text-[#cfd5de]">
                       Tanpa toko fisik
                     </dt>
-                    <dd className="mt-2 text-sm leading-relaxed text-[#D7E0E5]">
+                    <dd className="mt-2 text-sm leading-relaxed text-[#e9ecf0]">
                       Device tidak perlu dikirim sebelum harga dan cara pengerjaan disepakati.
                     </dd>
                   </div>

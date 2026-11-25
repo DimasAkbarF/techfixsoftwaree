@@ -110,14 +110,14 @@ export function PublicHeaderNav({
 
   const deskLink = (isActive: boolean) =>
     [
-      "relative inline-flex h-9 items-center gap-1 rounded-[var(--radius)] px-3 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+      "relative inline-flex h-9 items-center gap-1 rounded-[var(--radius)] px-3 text-[16px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
       !lightInk
         ? isActive
-          ? "font-semibold text-[var(--color-primary)] focus-visible:ring-[var(--color-accent)] after:absolute after:inset-x-3 after:bottom-1 after:h-[2px] after:rounded-full after:bg-[var(--color-accent)]"
+          ? "font-bold text-[var(--color-primary)] focus-visible:ring-[var(--color-accent)] after:absolute after:inset-x-3 after:bottom-0 after:h-[2px] after:rounded-full after:bg-[var(--color-accent)]"
           : "text-[var(--color-fg)]/75 hover:text-[var(--color-primary)] focus-visible:ring-[var(--color-accent)]"
         : isActive
-          ? "font-semibold text-white focus-visible:ring-[#7DD3FC] focus-visible:ring-offset-[#05070b] after:absolute after:inset-x-3 after:bottom-1 after:h-[2px] after:rounded-full after:bg-[#38BDF8]"
-          : "text-white/70 hover:text-white focus-visible:ring-[#7DD3FC] focus-visible:ring-offset-[#05070b]",
+          ? "font-bold text-white focus-visible:ring-[#7DD3FC] focus-visible:ring-offset-[#05070b] after:absolute after:inset-x-3 after:bottom-0 after:h-[2px] after:rounded-full after:bg-[#1fdcf2]"
+          : "text-[#d3d8df] hover:text-white focus-visible:ring-[#7DD3FC] focus-visible:ring-offset-[#05070b]",
     ].join(" ");
 
   const mobileItem = (isActive: boolean) =>
@@ -135,17 +135,27 @@ export function PublicHeaderNav({
     <header
       className={[
         overlay ? "fixed" : "sticky",
-        "inset-x-0 top-0 z-40 border-b transition-colors duration-200",
+        "inset-x-0 top-0 z-40 transition-colors duration-200",
         hasBar
           ? open
-            ? "border-[var(--color-border)]/70 bg-[#fbfdfc]/95 backdrop-blur-md"
+            ? "border-b border-[var(--color-border)]/70 bg-[#fbfdfc]/95 backdrop-blur-md"
             : lightInk
-              ? "border-white/10 bg-[#05070b]/45 backdrop-blur-sm"
-              : "border-[var(--color-border)]/60 bg-[#fbfdfc]/65 backdrop-blur-sm"
-          : "border-transparent bg-transparent",
+              ? "bg-[#05070b]/45 backdrop-blur-sm"
+              : "border-b border-[var(--color-border)]/60 bg-[#fbfdfc]/65 backdrop-blur-sm"
+          : "bg-transparent",
       ].join(" ")}
     >
-      <div className="relative mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4 px-4 lg:px-8">
+      {lightInk && !open && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-px"
+          style={{
+            background:
+              "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.22) 12%, rgba(255,255,255,0.22) 88%, transparent 100%)",
+          }}
+        />
+      )}
+      <div className="relative mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4 px-4 lg:h-[clamp(72px,calc(89*(100vw/1456)),96px)] lg:px-8">
         <Link
           href="/"
           aria-label="TechFixSoftware — Beranda"
@@ -208,10 +218,10 @@ export function PublicHeaderNav({
           <Link
             href="/#konsultasi"
             className={[
-              "ml-2 hidden h-9 items-center rounded-[var(--radius)] bg-[var(--color-accent)] px-4 text-sm font-semibold text-white transition-all hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 lg:inline-flex",
+              "ml-2 hidden items-center px-5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 lg:inline-flex",
               !lightInk
-                ? "focus-visible:ring-[var(--color-accent)]"
-                : "border border-[#38BDF8]/40 focus-visible:ring-[#7DD3FC] focus-visible:ring-offset-[#05070b]",
+                ? "h-9 rounded-[12px] bg-[linear-gradient(90deg,#17ddf4_0%,#3aa9ff_100%)] text-sm font-bold text-[#06121c] shadow-[0_6px_20px_rgba(30,200,245,0.25)] hover:brightness-110 focus-visible:ring-[var(--color-accent)]"
+                : "h-10 rounded-[12px] border-[1.5px] border-white/90 bg-black/15 text-[15px] font-bold text-white backdrop-blur-sm hover:bg-white/15 focus-visible:ring-[#7DD3FC] focus-visible:ring-offset-[#05070b]",
             ].join(" ")}
           >
             Konsultasi
@@ -308,7 +318,7 @@ export function PublicHeaderNav({
               <Link
                 href="/#konsultasi"
                 onClick={close}
-                className="mt-2 flex h-11 items-center justify-center rounded-[var(--radius)] bg-[var(--color-accent)] text-sm font-semibold text-white hover:brightness-110"
+                className="mt-2 flex h-11 items-center justify-center rounded-[12px] bg-[linear-gradient(90deg,#17ddf4_0%,#3aa9ff_100%)] text-sm font-bold text-[#06121c] shadow-[0_6px_20px_rgba(30,200,245,0.25)] hover:brightness-110"
               >
                 Konsultasi
               </Link>

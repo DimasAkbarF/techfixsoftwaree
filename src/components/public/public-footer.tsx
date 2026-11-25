@@ -77,7 +77,7 @@ export function PublicFooter() {
           </div>
           <Link
             href="/#konsultasi"
-            className="inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-[var(--radius)] bg-[var(--color-accent)] px-5 text-sm font-semibold text-white transition-all hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2"
+            className="inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-[12px] bg-[linear-gradient(90deg,#17ddf4_0%,#3aa9ff_100%)] px-5 text-sm font-bold text-[#06121c] shadow-[0_6px_20px_rgba(30,200,245,0.25)] transition-all hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2"
           >
             Sampaikan Keluhan
             <IconArrowRight className="h-4 w-4" />

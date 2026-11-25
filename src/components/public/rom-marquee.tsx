@@ -30,7 +30,13 @@ export async function RomMarquee() {
       : FALLBACK_ROMS;
 
   return (
-    <section aria-label="Daftar Custom ROM">
+    <section
+      aria-label="Daftar Custom ROM"
+      style={{
+        backgroundImage:
+          "radial-gradient(ellipse 45% 220px at 0% 0%, rgba(34,208,247,.10), transparent 70%)",
+      }}
+    >
       {/* Full-bleed: pita logo tidak dibatasi container 1200px. */}
       {/* Animasi menggeser tepat selebar satu salinan (1/3 lintasan) agar sambungan tidak terlihat. */}
       {/* shortcut: belum ada tombol pause (WCAG 2.2.2). Pause lewat hover/focus; animasi
@@ -52,7 +58,7 @@ export async function RomMarquee() {
                     height={96}
                     className="h-20 w-20 shrink-0 rounded-xl bg-white object-contain ring-1 ring-white/20 md:h-24 md:w-24"
                   />
-                  <span className="whitespace-nowrap text-[13px] font-semibold uppercase tracking-[0.12em] text-[#E6EBEE]">
+                  <span className="whitespace-nowrap text-[13px] font-semibold uppercase tracking-[0.12em] text-[var(--color-primary)]">
                     {rom.name}
                   </span>
                 </li>
