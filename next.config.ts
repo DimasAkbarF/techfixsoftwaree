@@ -4,16 +4,17 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 31536000,
   },
   experimental: {
     // Impor ikon per-simbol, bukan seluruh paket, agar bundle klien kecil.
     optimizePackageImports: ["@tabler/icons-react"],
     inlineCss: true,
-    // Cache Router RSC 30 detik untuk route dinamis (/admin/*) agar perpindahan tab instan;
-    // mutasi CRUD tetap memanggil revalidatePath/router.refresh sehingga data selalu segar.
+    // Cache Router RSC 60s (dinamis) & 300s (statis/ISR, selaras revalidate=300) agar
+    // perpindahan halaman di browser berlangsung ~5-20ms dari memori tanpa tunggu jaringan.
     staleTimes: {
-      dynamic: 30,
-      static: 180,
+      dynamic: 60,
+      static: 300,
     },
   },
   async headers() {
@@ -24,11 +25,16 @@ const nextConfig: NextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
         ],
       },
       {
-        // Aset statis logo & bukti servis jarang berubah; cache lama di browser & CDN.
-        source: "/testimonials/:path*",
+        // Aset statis logo & bukti servis jarang berubah; :path+ agar tidak ikut meng-cache HTML /testimonials.
+        source: "/testimonials/:path+",
         headers: [
           {
             key: "Cache-Control",
@@ -41,7 +47,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=604800, stale-while-revalidate=2592000",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
@@ -50,7 +56,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=604800, stale-while-revalidate=2592000",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },

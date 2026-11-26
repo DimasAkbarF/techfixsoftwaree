@@ -122,10 +122,10 @@ export default async function Home() {
           <HeroBackground />
           <div className="parallax-hero__content relative z-[2] mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-10 px-4 pb-24 pt-28 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:pb-24 lg:pt-[calc(118*var(--u))]">
             <div className="lg:col-span-7">
-              <p className="hero-reveal font-medium uppercase tracking-[0.045em] text-[#34d399] text-[13px] lg:text-[clamp(13px,calc(14.5*var(--u)),16px)]">
+              <p className="font-medium uppercase tracking-[0.045em] text-[#34d399] text-[13px] lg:text-[clamp(13px,calc(14.5*var(--u)),16px)]">
                 Jasa Servis Software Android &middot; Konsultasi &amp; Estimasi Transparan
               </p>
-              <h1 className="hero-reveal hero-reveal-1 mt-4 font-heading text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.03em] md:text-[3.5rem] lg:text-[clamp(2.75rem,calc(65*var(--u)),4.25rem)] lg:leading-[0.97]">
+              <h1 className="mt-4 font-heading text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.03em] md:text-[3.5rem] lg:text-[clamp(2.75rem,calc(65*var(--u)),4.25rem)] lg:leading-[0.97]">
                 <span className="bg-[linear-gradient(180deg,#ffffff_0%,#ffffff_45%,#c3c6cc_100%)] bg-clip-text text-transparent">
                   Servis software{" "}
                 </span>
