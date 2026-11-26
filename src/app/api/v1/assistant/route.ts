@@ -7,6 +7,7 @@ import {
   getPublishedServices,
 } from "@/lib/public-data";
 import { replyFromKnowledge } from "@/lib/assistant";
+import { createRateLimiter, getClientIp } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -18,35 +19,16 @@ const assistantSchema = z.object({
     .max(400, "Pesan maksimal 400 karakter"),
 });
 
-// shortcut: rate limit in-memory di-reset saat cold start serverless; upgrade ke Redis/Upstash bila traffic tinggi.
-const RATE_WINDOW_MS = 60_000;
-const RATE_MAX_REQUESTS = 30;
-const rateBucket = new Map<string, { count: number; resetAt: number }>();
-
-function checkRateLimit(ip: string) {
-  const now = Date.now();
-  if (rateBucket.size > 500) {
-    for (const [key, entry] of rateBucket) {
-      if (entry.resetAt <= now) rateBucket.delete(key);
-    }
-  }
-  const current = rateBucket.get(ip);
-  if (!current || current.resetAt <= now) {
-    rateBucket.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
-    return true;
-  }
-  if (current.count >= RATE_MAX_REQUESTS) return false;
-  current.count += 1;
-  return true;
-}
+const checkAssistantRateLimit = createRateLimiter({
+  windowMs: 60_000,
+  max: 30,
+});
 
 export async function POST(request: NextRequest) {
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    request.headers.get("x-real-ip") ||
-    "unknown";
+  const ip = getClientIp(request.headers);
+  const limit = checkAssistantRateLimit(ip);
 
-  if (!checkRateLimit(ip)) {
+  if (!limit.allowed) {
     return NextResponse.json(
       {
         success: false,
@@ -55,7 +37,10 @@ export async function POST(request: NextRequest) {
           message: "Terlalu banyak pesan dalam waktu singkat. Coba lagi sebentar lagi.",
         },
       },
-      { status: 429 }
+      {
+        status: 429,
+        headers: { "Retry-After": String(limit.retryAfterSec) },
+      }
     );
   }
 

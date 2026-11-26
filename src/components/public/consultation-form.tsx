@@ -32,6 +32,7 @@ export function ConsultationForm({
   const [phone, setPhone] = React.useState("");
   const [deviceType, setDeviceType] = React.useState("");
   const [complaint, setComplaint] = React.useState("");
+  const [website, setWebsite] = React.useState(""); // honeypot anti-bot
   const [loading, setLoading] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = React.useState<Record<string, string>>({});
@@ -55,6 +56,7 @@ export function ConsultationForm({
           deviceType,
           complaint,
           serviceId: serviceId || null,
+          website,
         }),
       });
 
@@ -133,11 +135,26 @@ export function ConsultationForm({
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Honeypot anti-bot: tersembunyi dari manusia & pembaca layar */}
+        <div className="sr-only" aria-hidden="true">
+          <label htmlFor="lead-website">Website</label>
+          <input
+            id="lead-website"
+            name="website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+          />
+        </div>
+
         <div className="space-y-1.5">
           <Label htmlFor="lead-name">Nama Anda *</Label>
           <Input
             id="lead-name"
             required
+            maxLength={100}
             placeholder="Contoh: Budi"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -156,6 +173,7 @@ export function ConsultationForm({
             inputMode="tel"
             autoComplete="tel"
             required
+            maxLength={20}
             placeholder="Contoh: 081234567890"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
@@ -171,6 +189,7 @@ export function ConsultationForm({
           <Input
             id="lead-device"
             required
+            maxLength={120}
             placeholder="Contoh: Xiaomi Redmi Note 10 Pro / Samsung A52"
             value={deviceType}
             onChange={(e) => setDeviceType(e.target.value)}
@@ -182,11 +201,17 @@ export function ConsultationForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="lead-complaint">Keluhan / Gejala Kerusakan *</Label>
+          <div className="flex items-baseline justify-between gap-2">
+            <Label htmlFor="lead-complaint">Keluhan / Gejala Kerusakan *</Label>
+            <span className="font-mono text-[11px] text-[var(--color-muted)]">
+              {complaint.length}/1000
+            </span>
+          </div>
           <Textarea
             id="lead-complaint"
             required
             rows={3}
+            maxLength={1000}
             placeholder="Contoh: Tiba-tiba mati dan stuck di logo setelah update sistem..."
             value={complaint}
             onChange={(e) => setComplaint(e.target.value)}

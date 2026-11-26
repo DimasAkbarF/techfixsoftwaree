@@ -3,21 +3,54 @@ import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { isValidWhatsappNumber, normalizePhone } from "@/lib/phone";
 import { notifyNewLead } from "@/lib/notify-lead";
+import { createRateLimiter, getClientIp } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
+const checkLeadRateLimit = createRateLimiter({
+  windowMs: 10 * 60_000, // 10 menit
+  max: 5,
+});
+
 const leadSchema = z.object({
-  name: z.string().trim().min(1, "Nama wajib diisi"),
+  name: z.string().trim().min(1, "Nama wajib diisi").max(100, "Nama maksimal 100 karakter"),
   phone: z
     .string()
     .trim()
     .refine(isValidWhatsappNumber, "Nomor WhatsApp tidak valid. Contoh: 081234567890"),
-  deviceType: z.string().trim().min(1, "Jenis device wajib diisi"),
-  complaint: z.string().trim().min(1, "Keluhan wajib diisi"),
+  deviceType: z
+    .string()
+    .trim()
+    .min(1, "Jenis device wajib diisi")
+    .max(120, "Tipe perangkat maksimal 120 karakter"),
+  complaint: z
+    .string()
+    .trim()
+    .min(1, "Keluhan wajib diisi")
+    .max(1000, "Keluhan maksimal 1000 karakter"),
   serviceId: z.string().optional().nullable(),
+  website: z.string().optional(), // honeypot anti-bot
 });
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request.headers);
+  const limit = checkLeadRateLimit(ip);
+  if (!limit.allowed) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: "RATE_LIMITED",
+          message:
+            "Terlalu banyak pengajuan konsultasi dari jaringan Anda. Silakan tunggu beberapa menit sebelum mencoba lagi.",
+        },
+      },
+      {
+        status: 429,
+        headers: { "Retry-After": String(limit.retryAfterSec) },
+      }
+    );
+  }
   let body: unknown;
   try {
     body = await request.json();
@@ -52,7 +85,23 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { name, phone, deviceType, complaint, serviceId } = validation.data;
+  const { name, phone, deviceType, complaint, serviceId, website } = validation.data;
+
+  // Honeypot terisi → tolak bot tanpa menyentuh DB maupun notifikasi Telegram.
+  if (website && website.trim().length > 0) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: "VALIDATION_ERROR",
+          message: "Permintaan tidak dapat diproses.",
+        },
+      },
+      { status: 422 }
+    );
+  }
+
+  const normalizedPhone = normalizePhone(phone);
 
   // 1. Check SiteSetting for whatsappNumber BEFORE saving lead!
   let siteSetting;
@@ -101,19 +150,34 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // 3. Save Lead with status = NEW BEFORE redirect! (NFR-05)
+  // 3. Cek duplikasi 60 detik terakhir (proteksi double-submit cepat), lalu simpan Lead status = NEW (NFR-05)
   let lead;
+  let isDuplicate = false;
   try {
-    lead = await prisma.lead.create({
-      data: {
-        name,
-        phone: normalizePhone(phone),
-        deviceType,
+    const recent = await prisma.lead.findFirst({
+      where: {
+        phone: normalizedPhone,
         complaint,
-        serviceId: serviceId || null,
-        status: "NEW",
+        createdAt: { gte: new Date(Date.now() - 60_000) },
       },
+      orderBy: { createdAt: "desc" },
     });
+
+    if (recent) {
+      lead = recent;
+      isDuplicate = true;
+    } else {
+      lead = await prisma.lead.create({
+        data: {
+          name,
+          phone: normalizedPhone,
+          deviceType,
+          complaint,
+          serviceId: serviceId || null,
+          status: "NEW",
+        },
+      });
+    }
   } catch (error) {
     console.error("Failed to save lead in database:", error);
     // CRITICAL: If insert fails, DO NOT redirect!
@@ -129,15 +193,17 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // 4. Notifikasi admin (best-effort, tidak menggagalkan lead bila gagal)
-  await notifyNewLead({
-    id: lead.id,
-    name: lead.name,
-    phone: lead.phone,
-    deviceType: lead.deviceType,
-    complaint: lead.complaint,
-    serviceName: serviceName || undefined,
-  });
+  // 4. Notifikasi admin (best-effort, dilewati bila duplikat 60 detik)
+  if (!isDuplicate) {
+    await notifyNewLead({
+      id: lead.id,
+      name: lead.name,
+      phone: lead.phone,
+      deviceType: lead.deviceType,
+      complaint: lead.complaint,
+      serviceName: serviceName || undefined,
+    });
+  }
 
   // 5. Construct WhatsApp redirect URL
   let cleanNumber = siteSetting.whatsappNumber.replace(/[^0-9]/g, "");
