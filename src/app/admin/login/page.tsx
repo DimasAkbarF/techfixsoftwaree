@@ -1,8 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,7 +8,6 @@ import { Alert } from "@/components/ui/alert";
 import { IconBrandAndroid, IconLock, IconLoader2 } from "@tabler/icons-react";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
@@ -22,21 +19,36 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const { error: signInError } = await authClient.signIn.email({
-        email,
-        password,
+      const res = await fetch("/api/auth/sign-in/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          email: email.trim(),
+          password,
+        }),
       });
 
-      if (signInError) {
-        setError(signInError.message || "Email atau password salah.");
+      const payload = (await res.json().catch(() => null)) as {
+        message?: string;
+        code?: string;
+      } | null;
+
+      if (!res.ok) {
+        if (res.status === 401 || payload?.code === "INVALID_EMAIL_OR_PASSWORD") {
+          setError("Email atau password salah.");
+        } else {
+          setError(payload?.message || `Gagal masuk (HTTP ${res.status}).`);
+        }
         setLoading(false);
         return;
       }
 
-      router.push("/admin");
-      router.refresh();
-    } catch {
-      setError("Terjadi kesalahan koneksi. Silakan coba lagi.");
+      // Full navigation memastikan middleware & Server Component langsung membaca cookie sesi baru.
+      window.location.assign("/admin");
+    } catch (err) {
+      console.error("Admin login error:", err);
+      setError("Terjadi kesalahan koneksi. Muat ulang halaman lalu coba lagi.");
       setLoading(false);
     }
   };
