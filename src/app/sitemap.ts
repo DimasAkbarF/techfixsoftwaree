@@ -19,8 +19,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getPublishedArticles(),
   ]);
 
+  const latestContentDate = [
+    ...services.map((s) => new Date(s.updatedAt).getTime()),
+    ...articles.map((a) => new Date(a.updatedAt).getTime()),
+  ].reduce((max, t) => (t > max ? t : max), Date.now());
+  const siteLastMod = new Date(latestContentDate);
+
   return [
-    ...STATIC_PAGES,
+    ...STATIC_PAGES.map((page) => ({ ...page, lastModified: siteLastMod })),
     ...services.map((service) => ({
       url: `${SITE_URL}/services/${service.slug}`,
       lastModified: new Date(service.updatedAt),
