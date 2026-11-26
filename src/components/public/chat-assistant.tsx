@@ -31,10 +31,16 @@ function nowLabel() {
   });
 }
 
+function wait(ms: number) {
+  return new Promise<void>((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
+}
+
 export function ChatAssistant() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [typing, setTyping] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>(DEFAULT_QUICK_PROMPTS);
   const [messages, setMessages] = useState<ChatItem[]>(() => [
     {
@@ -53,18 +59,22 @@ export function ChatAssistant() {
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
+  const mountedRef = useRef(true);
 
-  // Isi jam sambutan di client saja agar tidak memicu hydration mismatch.
   useEffect(() => {
+    mountedRef.current = true;
     setMessages((prev) =>
       prev.map((m) => (m.id === "welcome-1" && !m.time ? { ...m, time: nowLabel() } : m))
     );
+    return () => {
+      mountedRef.current = false;
+    };
   }, []);
 
   useEffect(() => {
     if (!open) return;
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, loading, open]);
+  }, [messages, typing, open]);
 
   useEffect(() => {
     if (!open) return;
@@ -81,7 +91,7 @@ export function ChatAssistant() {
 
   async function sendMessage(rawText: string) {
     const text = rawText.trim();
-    if (!text || loading) return;
+    if (!text || typing) return;
 
     const userMsg: ChatItem = {
       id: `u-${Date.now()}`,
@@ -92,7 +102,9 @@ export function ChatAssistant() {
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setSuggestions([]);
-    setLoading(true);
+    setTyping(true);
+
+    const startedAt = Date.now();
 
     try {
       const res = await fetch("/api/v1/assistant", {
@@ -112,25 +124,41 @@ export function ChatAssistant() {
       }
 
       const reply = payload.data;
+      const firstLen = reply.messages[0]?.length ?? 60;
+      const targetFirstDelay = Math.min(900, Math.max(600, 420 + firstLen * 2.5));
+      const remaining = targetFirstDelay - (Date.now() - startedAt);
+      if (remaining > 0) await wait(remaining);
+      if (!mountedRef.current) return;
+
       const stamp = nowLabel();
-      const botItems: ChatItem[] = reply.messages.map((msg, idx) => {
+
+      // Tampilkan bubble satu per satu dengan jeda "sedang mengetik..." yang alami.
+      for (let idx = 0; idx < reply.messages.length; idx += 1) {
+        if (idx > 0) {
+          await wait(480);
+          if (!mountedRef.current) return;
+        }
         const isLast = idx === reply.messages.length - 1;
-        return {
+        const nextItem: ChatItem = {
           id: `b-${Date.now()}-${idx}`,
           role: "bot",
-          text: msg,
+          text: reply.messages[idx],
           time: idx === 0 ? stamp : undefined,
           links: isLast ? reply.links : undefined,
           whatsappUrl: isLast ? reply.whatsappUrl : undefined,
           whatsappLabel: isLast ? reply.whatsappLabel : undefined,
         };
-      });
+        setMessages((prev) => [...prev, nextItem]);
+      }
 
-      setMessages((prev) => [...prev, ...botItems]);
-      if (reply.suggestions?.length) {
+      if (reply.suggestions?.length && mountedRef.current) {
         setSuggestions(reply.suggestions);
       }
     } catch (error) {
+      const remaining = 500 - (Date.now() - startedAt);
+      if (remaining > 0) await wait(remaining);
+      if (!mountedRef.current) return;
+
       const errMsg =
         error instanceof Error
           ? error.message
@@ -145,7 +173,7 @@ export function ChatAssistant() {
         },
       ]);
     } finally {
-      setLoading(false);
+      if (mountedRef.current) setTyping(false);
     }
   }
 
@@ -158,7 +186,7 @@ export function ChatAssistant() {
           aria-label="Asisten TechFixSoftware"
           className="mb-3 flex w-[calc(100vw-2rem)] max-w-[380px] flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-white shadow-[0_24px_60px_-16px_rgba(11,18,32,0.34)]"
         >
-          {/* Header: Navy brand + indikator online emerald */}
+          {/* Header: Navy brand + status live (Online / Sedang mengetik...) */}
           <header className="relative flex items-center justify-between gap-3 bg-[#0B1220] px-4 py-3.5 text-white">
             <div
               aria-hidden="true"
@@ -183,9 +211,15 @@ export function ChatAssistant() {
                 <p className="mt-0.5 flex items-center gap-1.5 text-xs text-[#cbd5e1]">
                   <span
                     aria-hidden="true"
-                    className="inline-block h-2 w-2 rounded-full bg-[#34d399]"
+                    className={`inline-block h-2 w-2 rounded-full bg-[#34d399] ${
+                      typing ? "animate-ping" : ""
+                    }`}
                   />
-                  Online &middot; siap membantu
+                  {typing ? (
+                    <span className="font-medium text-[#6EE7B7]">Sedang mengetik...</span>
+                  ) : (
+                    <span>Online &middot; siap membantu</span>
+                  )}
                 </p>
               </div>
             </div>
@@ -197,7 +231,7 @@ export function ChatAssistant() {
                 launcherRef.current?.focus();
               }}
               aria-label="Tutup jendela chat"
-              className="relative flex h-9 w-9 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6EE7B7]"
+              className="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6EE7B7]"
             >
               <IconX className="h-5 w-5" />
             </button>
@@ -258,20 +292,20 @@ export function ChatAssistant() {
               )
             )}
 
-            {loading && (
-              <div className="flex justify-start">
-                <div
-                  aria-label="Asisten sedang mengetik"
-                  className="inline-flex items-center gap-1 rounded-2xl rounded-bl-sm border border-[var(--color-border)] bg-white px-3.5 py-3 shadow-xs"
-                >
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-accent)]" />
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-accent)] [animation-delay:150ms]" />
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-accent)] [animation-delay:300ms]" />
+            {typing && (
+              <div className="flex justify-start" role="status" aria-live="polite">
+                <div className="inline-flex items-center gap-2 rounded-2xl rounded-bl-sm border border-[var(--color-border)] bg-white px-3.5 py-2.5 text-xs text-[var(--color-muted)] shadow-xs">
+                  <span>Sedang mengetik</span>
+                  <span className="inline-flex items-center gap-1" aria-hidden="true">
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--color-accent)] [animation-delay:0ms]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--color-accent)] [animation-delay:150ms]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--color-accent)] [animation-delay:300ms]" />
+                  </span>
                 </div>
               </div>
             )}
 
-            {!loading && suggestions.length > 0 && (
+            {!typing && suggestions.length > 0 && (
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {suggestions.map((prompt) => (
                   <button
@@ -308,7 +342,7 @@ export function ChatAssistant() {
               />
               <button
                 type="submit"
-                disabled={loading || !input.trim()}
+                disabled={typing || !input.trim()}
                 aria-label="Kirim pesan"
                 className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-xl bg-[#0B1220] text-white transition-colors hover:bg-[#0F766E] disabled:cursor-not-allowed disabled:opacity-45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-1"
               >
