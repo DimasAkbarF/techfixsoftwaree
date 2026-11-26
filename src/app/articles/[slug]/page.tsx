@@ -14,13 +14,14 @@ import { HeroBackground } from "@/components/public/hero-background";
 import { PublicFooter } from "@/components/public/public-footer";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumb, clip, pageSeo, SITE_NAME } from "@/lib/seo";
-import { SITE_URL } from "@/lib/site";
+import { SITE_AUTHOR, SITE_URL } from "@/lib/site";
 import type { Metadata } from "next";
 import {
   IconArrowRight,
   IconChevronRight,
   IconCalendar,
   IconMessageCircle,
+  IconUser,
 } from "@tabler/icons-react";
 
 // ISR: cache 5 menit; admin memanggil revalidatePath/revalidateTag saat konten berubah.
@@ -105,7 +106,7 @@ export default async function ArticleDetailPage({
     description: clip(article.metaDescription || article.title),
     dateModified: modifiedTime.toISOString(),
     inLanguage: "id-ID",
-    author: { "@id": `${SITE_URL}/#business` },
+    author: { "@id": `${SITE_URL}/#author` },
     publisher: { "@id": `${SITE_URL}/#business` },
     mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl },
     image: article.coverImageUrl || `${SITE_URL}/brand/techfix-software.png`,
@@ -158,6 +159,10 @@ export default async function ArticleDetailPage({
                   <time dateTime={modifiedTime.toISOString()}>{formatTanggal(modifiedTime)}</time>
                 </span>
               )}
+              <span className="inline-flex items-center gap-2">
+                <IconUser className="h-4 w-4 text-[#38BDF8]" />
+                Ditulis &amp; Ditinjau oleh: {SITE_AUTHOR.name} — {SITE_AUTHOR.role}
+              </span>
             </div>
             <h1 className="font-heading text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
               {article.title}

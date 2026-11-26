@@ -7,10 +7,20 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       { userAgent: "*", allow: "/", disallow },
-      // Izinkan crawler pencarian AI (bukan training-only) untuk sitasi jawaban AI.
+      // Izinkan semua crawler AI Search & LLM Engine untuk sitasi jawaban
       { userAgent: "OAI-SearchBot", allow: "/", disallow },
+      { userAgent: "ChatGPT-User", allow: "/", disallow },
+      { userAgent: "GPTBot", allow: "/", disallow },
       { userAgent: "Claude-SearchBot", allow: "/", disallow },
+      { userAgent: "ClaudeBot", allow: "/", disallow },
+      { userAgent: "anthropic-ai", allow: "/", disallow },
       { userAgent: "PerplexityBot", allow: "/", disallow },
+      { userAgent: "Google-Extended", allow: "/", disallow },
+      { userAgent: "GoogleOther", allow: "/", disallow },
+      { userAgent: "Bingbot", allow: "/", disallow },
+      { userAgent: "Applebot-Extended", allow: "/", disallow },
+      { userAgent: "Meta-ExternalAgent", allow: "/", disallow },
+      { userAgent: "cohere-ai", allow: "/", disallow },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
   };

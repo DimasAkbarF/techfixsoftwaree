@@ -12,6 +12,20 @@ export function clip(text: string, max = 158) {
 }
 
 /**
+ * Paragraf pembuka dari deskripsi layanan panjang (heading + bullet + Q&A).
+ * Kartu katalog, meta description, dan schema memakai bagian ini agar tidak
+ * ikut menelan heading atau bullet.
+ */
+export function leadParagraph(text: string) {
+  const first = text.split(/\n\s*\n/)[0] ?? text;
+  return first
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/^[-•*]\s+/gm, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
  * Metadata per halaman. Next tidak mewarisi title/description ke Open Graph,
  * jadi keduanya harus diisi eksplisit di setiap halaman.
  */

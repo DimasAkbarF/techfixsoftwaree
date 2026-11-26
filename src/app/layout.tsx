@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import { getPublicSiteSetting } from "@/lib/public-data";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_AUTHOR, SITE_NAME, SITE_URL } from "@/lib/site";
 import { JsonLd } from "@/components/seo/json-ld";
 import "./globals.css";
 
@@ -96,23 +96,69 @@ export default async function RootLayout({
         "@type": "ProfessionalService",
         "@id": `${SITE_URL}/#business`,
         name: SITE_NAME,
+        alternateName: "TechFix Software Indonesia",
         url: SITE_URL,
         logo: `${SITE_URL}/brand/techfix-software.png`,
         image: `${SITE_URL}/brand/techfix-software.png`,
         description:
-          "Servis software Android: bootloop, brick, stuck logo, root, custom ROM, flashing, dan downgrade. Remote dan Rangkasbitung.",
+          "Pusat jasa servis software Android remote terpercaya di Indonesia: mengatasi bootloop, hardbrick, stuck logo, flash firmware, root Magisk/KernelSU, custom ROM, unlock bootloader, dan downgrade OS tanpa perlu ke toko fisik.",
         areaServed: [
-          { "@type": "City", "name": "Rangkasbitung" },
           { "@type": "Country", "name": "Indonesia" },
+          { "@type": "City", "name": "Rangkasbitung" },
         ],
         priceRange: "Rp50.000+",
+        currenciesAccepted: "IDR",
+        paymentAccepted: "Bank Transfer, QRIS, E-Wallet",
         knowsAbout: [
-          "Root Android",
-          "Custom ROM",
-          "Unbrick",
-          "Flash Firmware",
-          "Custom Recovery",
+          "Jasa Servis Software Android",
+          "Flash Firmware Android",
+          "Perbaikan HP Bootloop dan Stuck Logo",
+          "Unbrick Hardbrick EDL 9008",
+          "Root Android Magisk KernelSU",
+          "Install Custom ROM LineageOS PixelOS",
+          "Unlock Bootloader UBL",
+          "Bypass FRP Google Account",
+          "Custom Recovery TWRP OrangeFox",
+          "Downgrade OS Android",
         ],
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Layanan Servis Software Android",
+          itemListElement: [
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Perbaikan Bootloop & Stuck Logo",
+                description: "Penanganan HP Android gagal booting atau nyangkut logo.",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Unbrick Android (Hardbrick/Softbrick)",
+                description: "Pemulihan perangkat mati total via mode EDL atau Fastboot.",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Jasa Root Android & Modul",
+                description: "Rooting aman via Magisk atau KernelSU.",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Pemasangan Custom ROM",
+                description: "Upgrade performa dan sistem operasi terbaru untuk Android lawas.",
+              },
+            },
+          ],
+        },
         ...(phone ? { telephone: phone } : {}),
       },
       {
@@ -122,6 +168,22 @@ export default async function RootLayout({
         name: SITE_NAME,
         inLanguage: "id-ID",
         publisher: { "@id": `${SITE_URL}/#business` },
+      },
+      {
+        "@type": "Person",
+        "@id": `${SITE_URL}/#author`,
+        name: SITE_AUTHOR.name,
+        jobTitle: SITE_AUTHOR.role,
+        description: SITE_AUTHOR.bio,
+        worksFor: { "@id": `${SITE_URL}/#business` },
+        knowsAbout: [
+          "Root Android",
+          "Bootloop",
+          "Unbrick EDL 9008",
+          "Flash Firmware",
+          "Custom ROM",
+          "Custom Recovery",
+        ],
       },
     ],
   };

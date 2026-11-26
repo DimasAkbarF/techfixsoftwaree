@@ -10,7 +10,9 @@ import {
 } from "@/lib/public-data";
 import { pickRelatedArticlesForService } from "@/lib/related-content";
 import { JsonLd } from "@/components/seo/json-ld";
-import { breadcrumb, clip, pageSeo } from "@/lib/seo";
+import { breadcrumb, clip, leadParagraph, pageSeo } from "@/lib/seo";
+import { parseArticleBlocks } from "@/lib/article-blocks";
+import { ContentBlocks } from "@/components/public/content-blocks";
 import { SITE_URL } from "@/lib/site";
 import { ServiceIcon } from "@/components/common/service-icon";
 import { ConsultationForm } from "@/components/public/consultation-form";
@@ -48,7 +50,7 @@ export async function generateMetadata({
 
   return pageSeo({
     title: `${service.name} — TechFixSoftware`,
-    description: clip(service.description),
+    description: clip(leadParagraph(service.description)),
     path: `/services/${service.slug}`,
   });
 }
@@ -80,12 +82,17 @@ export default async function ServiceDetailPage({
   const minPrice = service.priceFromLabel.match(/Rp\s?([\d.]+)/)?.[1]?.replace(/\./g, "");
   const serviceUrl = `${SITE_URL}/services/${service.slug}`;
 
+  // Deskripsi berisi paragraf pembuka + bagian detail (heading, bullet, Q&A).
+  const descriptionBlocks = parseArticleBlocks(service.description);
+  const [leadBlock, ...detailBlocks] = descriptionBlocks;
+  const lead = leadBlock?.type === "p" ? leadBlock.text : leadParagraph(service.description);
+
   const serviceLd = {
     "@context": "https://schema.org",
     "@type": "Service",
     name: service.name,
     serviceType: service.category,
-    description: service.description,
+    description: leadParagraph(service.description),
     provider: { "@id": `${SITE_URL}/#business` },
     areaServed: [{ "@type": "Country", "name": "Indonesia" }],
     url: serviceUrl,
@@ -157,7 +164,7 @@ export default async function ServiceDetailPage({
           <div className="lg:col-span-8 space-y-8">
             <div className="border-b border-[var(--color-border)] pb-6">
               <p className="text-base text-[var(--color-muted)] leading-relaxed mt-4">
-                {service.description}
+                {lead}
               </p>
 
               {/* Ringkasan fakta terstruktur untuk pembaca, Google, dan Answer Engine */}
@@ -220,6 +227,13 @@ export default async function ServiceDetailPage({
                   ))}
                 </ul>
               </div>
+            )}
+
+            {/* Detail layanan dari konten panjang di DB (heading, bullet, Q&A) */}
+            {detailBlocks.length > 0 && (
+              <section className="border border-[var(--color-border)] bg-[var(--color-surface)]/85 p-6 rounded-[var(--radius)]">
+                <ContentBlocks blocks={detailBlocks} />
+              </section>
             )}
 
             {/* Aturan Alur & Informasi Rumahan (DEC-002) */}

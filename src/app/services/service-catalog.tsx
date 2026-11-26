@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { ServiceIcon } from "@/components/common/service-icon";
+import { leadParagraph } from "@/lib/seo";
 import { IconArrowRight, IconFilter, IconTool } from "@tabler/icons-react";
 
 interface CatalogService {
@@ -57,7 +58,7 @@ export function ServiceList({ services }: { services: CatalogService[] }) {
                 </span>
               </div>
               <p className="text-sm text-[var(--color-muted)] max-w-2xl line-clamp-2">
-                {service.description}
+                {leadParagraph(service.description)}
               </p>
             </div>
           </div>
