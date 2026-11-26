@@ -49,5 +49,10 @@ export const auth = betterAuth({
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 days
     updateAge: 60 * 60 * 24, // 1 day
+    // Signed cookie cache 5 menit: memangkas 1 round-trip DB Neon pada tiap navigasi /admin.
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60,
+    },
   },
 });

@@ -22,6 +22,14 @@ export async function getAdminTestimonials() {
   try {
     return await prisma.testimonial.findMany({
       orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        customerName: true,
+        deviceType: true,
+        review: true,
+        rating: true,
+        isPublished: true,
+      },
     });
   } catch (error) {
     console.error("Error fetching admin testimonials:", error);

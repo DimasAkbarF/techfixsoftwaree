@@ -34,12 +34,25 @@ export default async function AdminDashboardPage() {
   };
 
   try {
-    const [leads, services, articles, testimonials, due, dueList] = await Promise.all([
-      prisma.lead.count({ where: { status: "NEW" } }),
-      prisma.service.count({ where: { isPublished: true } }),
-      prisma.article.count(),
-      prisma.testimonial.count(),
-      prisma.lead.count({ where: dueWhere }),
+    const [counts, dueList] = await Promise.all([
+      prisma.$queryRaw<
+        Array<{
+          new_leads: number;
+          active_services: number;
+          articles: number;
+          testimonials: number;
+          due_leads: number;
+        }>
+      >`
+        SELECT
+          (SELECT count(*)::int FROM "Lead" WHERE status = 'NEW') AS new_leads,
+          (SELECT count(*)::int FROM "Service" WHERE "isPublished" = true) AS active_services,
+          (SELECT count(*)::int FROM "Article") AS articles,
+          (SELECT count(*)::int FROM "Testimonial") AS testimonials,
+          (SELECT count(*)::int FROM "Lead"
+            WHERE status IN ('NEW', 'CONTACTED')
+               OR (status = 'SCHEDULED' AND "nextFollowUpAt" <= NOW())) AS due_leads
+      `,
       prisma.lead.findMany({
         where: dueWhere,
         orderBy: [{ nextFollowUpAt: "asc" }, { createdAt: "asc" }],
@@ -53,11 +66,14 @@ export default async function AdminDashboardPage() {
         },
       }),
     ]);
-    newLeadsCount = leads;
-    activeServicesCount = services;
-    articlesCount = articles;
-    testimonialsCount = testimonials;
-    dueLeadsCount = due;
+    const row = counts[0];
+    if (row) {
+      newLeadsCount = Number(row.new_leads) || 0;
+      activeServicesCount = Number(row.active_services) || 0;
+      articlesCount = Number(row.articles) || 0;
+      testimonialsCount = Number(row.testimonials) || 0;
+      dueLeadsCount = Number(row.due_leads) || 0;
+    }
     dueLeads = dueList;
   } catch {
     // Database connection pending or offline

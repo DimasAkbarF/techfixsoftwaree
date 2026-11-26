@@ -9,6 +9,12 @@ const nextConfig: NextConfig = {
     // Impor ikon per-simbol, bukan seluruh paket, agar bundle klien kecil.
     optimizePackageImports: ["@tabler/icons-react"],
     inlineCss: true,
+    // Cache Router RSC 30 detik untuk route dinamis (/admin/*) agar perpindahan tab instan;
+    // mutasi CRUD tetap memanggil revalidatePath/router.refresh sehingga data selalu segar.
+    staleTimes: {
+      dynamic: 30,
+      static: 180,
+    },
   },
   async headers() {
     return [

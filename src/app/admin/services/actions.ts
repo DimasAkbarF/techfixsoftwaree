@@ -29,6 +29,16 @@ export async function getAdminServices() {
   try {
     return await prisma.service.findMany({
       orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        category: true,
+        priceFromLabel: true,
+        icon: true,
+        sortOrder: true,
+        isPublished: true,
+      },
     });
   } catch (err) {
     console.error("Error fetching services:", err);

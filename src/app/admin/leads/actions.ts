@@ -33,6 +33,7 @@ export async function getAdminLeads(status?: string) {
     return await prisma.lead.findMany({
       where: whereClause,
       orderBy: { createdAt: "desc" },
+      take: 100,
       include: leadInclude,
     });
   } catch (error) {

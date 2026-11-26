@@ -27,6 +27,13 @@ export async function getAdminArticles() {
   try {
     return await prisma.article.findMany({
       orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        status: true,
+        publishedAt: true,
+      },
     });
   } catch (error) {
     console.error("Error fetching admin articles:", error);

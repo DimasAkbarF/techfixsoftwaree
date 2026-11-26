@@ -86,6 +86,7 @@ export function AdminSidebar() {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={true}
                 onClick={() => setMobileOpen(false)}
                 aria-current={active ? "page" : undefined}
                 className={[
