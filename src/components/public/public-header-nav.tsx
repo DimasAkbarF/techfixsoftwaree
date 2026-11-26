@@ -178,12 +178,14 @@ export function PublicHeaderNav({
                 <div className="absolute left-0 top-full z-50 mt-2 max-h-[min(70vh,26rem)] w-64 overflow-y-auto rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] py-1.5 shadow-[0_18px_44px_-28px_rgba(11,18,32,0.45)]">
                   <Link
                     href="/services"
+                    prefetch={true}
                     className="block px-4 py-2 text-sm font-semibold text-[var(--color-primary)] hover:bg-[#F1F4F6]"
                   >
                     Semua layanan
                   </Link>
                   <Link
                     href="/cara-kerja"
+                    prefetch={true}
                     className="block px-4 py-2 text-sm text-[var(--color-fg)] hover:bg-[#F1F4F6]"
                   >
                     Cara kerja
@@ -204,6 +206,7 @@ export function PublicHeaderNav({
               <Link
                 key={item.key}
                 href={item.href}
+                prefetch={true}
                 aria-current={active === item.key ? "page" : undefined}
                 className={deskLink(active === item.key)}
               >

@@ -8,6 +8,7 @@ const SITE_NAV = [
   { href: "/services", label: "Katalog Layanan" },
   { href: "/articles", label: "Artikel" },
   { href: "/testimonials", label: "Testimoni" },
+  { href: "/tentang", label: "Tentang Kami" },
 ];
 
 export function PublicFooter() {
@@ -31,6 +32,7 @@ export function PublicFooter() {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  prefetch={true}
                   className="inline-block leading-6 text-[var(--color-fg)] hover:text-[var(--color-accent)]"
                 >
                   {item.label}
@@ -89,9 +91,6 @@ export function PublicFooter() {
       <div className="border-t border-[var(--color-border)]">
         <div className="mx-auto flex max-w-[1200px] flex-col gap-2 px-4 pb-20 pt-5 text-xs text-[var(--color-muted)] sm:flex-row sm:items-center sm:justify-between sm:pb-5 lg:px-8">
           <p>&copy; {new Date().getFullYear()} TechFixSoftware. Harga final disepakati via WhatsApp.</p>
-          <Link href="/admin" className="inline-block leading-6 hover:text-[var(--color-primary)] hover:underline">
-            Masuk Admin
-          </Link>
         </div>
       </div>
       <ChatAssistant />
