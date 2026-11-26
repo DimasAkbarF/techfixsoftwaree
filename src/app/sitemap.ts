@@ -10,6 +10,7 @@ const STATIC_PAGES: MetadataRoute.Sitemap = [
   { url: `${SITE_URL}/services`, changeFrequency: "weekly", priority: 0.9 },
   { url: `${SITE_URL}/articles`, changeFrequency: "weekly", priority: 0.8 },
   { url: `${SITE_URL}/cara-kerja`, changeFrequency: "monthly", priority: 0.7 },
+  { url: `${SITE_URL}/tentang`, changeFrequency: "monthly", priority: 0.7 },
   { url: `${SITE_URL}/testimonials`, changeFrequency: "weekly", priority: 0.6 },
 ];
 
