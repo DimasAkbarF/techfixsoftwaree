@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert } from "@/components/ui/alert";
+import { ImageUpload } from "@/components/admin/image-upload";
 import { IconDeviceFloppy, IconLoader2, IconAlertCircle, IconCheck } from "@tabler/icons-react";
 
 export function SettingsForm({ initialData }: { initialData: SiteSettingData }) {
   const [loading, setLoading] = React.useState(false);
+  const [logoUrl, setLogoUrl] = React.useState<string | null>(initialData.logoUrl || null);
   const [successMsg, setSuccessMsg] = React.useState<string | null>(null);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
 
@@ -66,16 +68,14 @@ export function SettingsForm({ initialData }: { initialData: SiteSettingData }) 
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="logoUrl">URL Logo Brand</Label>
-          <Input
-            id="logoUrl"
-            name="logoUrl"
-            defaultValue={initialData.logoUrl || ""}
-            placeholder="https://..."
+          <Label>Logo Brand (UploadThing)</Label>
+          <input type="hidden" name="logoUrl" value={logoUrl || ""} />
+          <ImageUpload
+            value={logoUrl}
+            onChange={(url) => setLogoUrl(url)}
+            label="Unggah Logo Brand"
+            helperText="Unggah logo resmi berformat PNG transparan, JPG, atau WEBP."
           />
-          <p className="text-xs text-[var(--color-muted)]">
-            URL aset logo brand resmi TechFixSoftware (bisa diisi via UploadThing).
-          </p>
         </div>
 
         <div className="space-y-1.5">

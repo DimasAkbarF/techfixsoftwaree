@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Alert } from "@/components/ui/alert";
 import { ImageUpload } from "@/components/admin/image-upload";
+import { parseArticleBlocks } from "@/lib/article-blocks";
+import { ContentBlocks } from "@/components/public/content-blocks";
 import {
   IconDeviceFloppy,
   IconLoader2,
@@ -61,12 +63,12 @@ function ArticlePreview({
         <h3 className="font-heading text-lg font-bold leading-snug text-[var(--color-primary)]">
           {title.trim() || "Judul artikel"}
         </h3>
-        <div className="mt-3 whitespace-pre-wrap text-[13px] leading-relaxed text-[var(--color-fg)]">
+        <div className="mt-3 text-[13px] leading-relaxed text-[var(--color-fg)]">
           {content.trim() ? (
-            content
+            <ContentBlocks blocks={parseArticleBlocks(content)} />
           ) : (
             <span className="text-[var(--color-muted)]">
-              Isi artikel akan tampil di sini saat Anda menulis.
+              Isi artikel akan tampil di sini saat Anda menulis (mendukung ## Subjudul, ### Poin, dan - bullet).
             </span>
           )}
         </div>

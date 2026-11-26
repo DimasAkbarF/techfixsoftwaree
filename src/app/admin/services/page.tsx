@@ -13,12 +13,31 @@ import {
 } from "@/components/ui/table";
 import { ServiceIcon } from "@/components/common/service-icon";
 import { ServiceDeleteButton } from "@/components/admin/service-delete-button";
-import { IconPlus, IconEdit, IconTool } from "@tabler/icons-react";
+import { IconPlus, IconEdit, IconTool, IconSearch } from "@tabler/icons-react";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminServicesPage() {
-  const services = await getAdminServices();
+export default async function AdminServicesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; status?: string }>;
+}) {
+  const { q = "", status = "ALL" } = await searchParams;
+  const query = q.trim().toLowerCase();
+  const statusFilter = status === "PUBLISHED" || status === "DRAFT" ? status : "ALL";
+
+  const allServices = await getAdminServices();
+  const services = allServices.filter((service) => {
+    if (statusFilter === "PUBLISHED" && !service.isPublished) return false;
+    if (statusFilter === "DRAFT" && service.isPublished) return false;
+    if (!query) return true;
+    return (
+      service.name.toLowerCase().includes(query) ||
+      service.slug.toLowerCase().includes(query) ||
+      service.category.toLowerCase().includes(query)
+    );
+  });
+  const hasFilter = Boolean(query) || statusFilter !== "ALL";
 
   return (
     <div className="space-y-6">
@@ -39,21 +58,68 @@ export default async function AdminServicesPage() {
         </Link>
       </div>
 
+      {allServices.length > 0 && (
+        <form method="GET" className="flex flex-col sm:flex-row gap-2.5 sm:items-center">
+          <div className="relative flex-1 max-w-md">
+            <IconSearch className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-muted)]" />
+            <input
+              type="search"
+              name="q"
+              defaultValue={q}
+              placeholder="Cari nama, slug, atau kategori layanan..."
+              aria-label="Cari layanan"
+              className="h-10 w-full rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] pl-9 pr-3 text-sm text-[var(--color-fg)] placeholder:text-[var(--color-muted)] focus:border-[var(--color-accent)] focus:outline-none"
+            />
+          </div>
+          <select
+            name="status"
+            defaultValue={statusFilter}
+            aria-label="Filter status layanan"
+            className="h-10 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-fg)] focus:border-[var(--color-accent)] focus:outline-none"
+          >
+            <option value="ALL">Semua Status ({allServices.length})</option>
+            <option value="PUBLISHED">Terbit</option>
+            <option value="DRAFT">Draft</option>
+          </select>
+          <Button type="submit" variant="outline" size="sm" className="h-10">
+            Terapkan
+          </Button>
+          {hasFilter && (
+            <Link
+              href="/admin/services"
+              className="text-xs font-semibold text-[var(--color-secondary)] hover:underline px-1"
+            >
+              Reset
+            </Link>
+          )}
+        </form>
+      )}
+
       {services.length === 0 ? (
         <div className="border border-dashed border-[var(--color-border)] rounded-[var(--radius)] p-12 text-center bg-[var(--color-surface)]">
           <IconTool className="w-10 h-10 text-[var(--color-muted)] mx-auto mb-3" />
           <h3 className="font-heading text-base font-semibold text-[var(--color-primary)] mb-1">
-            Belum ada layanan
+            {hasFilter ? "Tidak ada layanan yang cocok" : "Belum ada layanan"}
           </h3>
           <p className="text-sm text-[var(--color-muted)] max-w-sm mx-auto mb-4">
-            Tambahkan layanan servis pertama (seperti Bootloop, Flashing, atau Root) untuk mengisi katalog website.
+            {hasFilter
+              ? "Coba ubah kata kunci pencarian atau reset filter status."
+              : "Tambahkan layanan servis pertama (seperti Bootloop, Flashing, atau Root) untuk mengisi katalog website."}
           </p>
-          <Link href="/admin/services/new">
-            <Button variant="secondary" size="sm" className="gap-2">
-              <IconPlus className="w-4 h-4" />
-              <span>Tambah Layanan Sekarang</span>
-            </Button>
-          </Link>
+          {hasFilter ? (
+            <Link href="/admin/services">
+              <Button variant="outline" size="sm">
+                Reset Filter
+              </Button>
+            </Link>
+          ) : (
+            <Link href="/admin/services/new">
+              <Button variant="secondary" size="sm" className="gap-2">
+                <IconPlus className="w-4 h-4" />
+                <span>Tambah Layanan Sekarang</span>
+              </Button>
+            </Link>
+          )}
         </div>
       ) : (
         <Table>

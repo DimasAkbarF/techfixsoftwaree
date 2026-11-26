@@ -12,12 +12,29 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { ArticleDeleteButton } from "@/components/admin/article-delete-button";
-import { IconPlus, IconEdit, IconArticle } from "@tabler/icons-react";
+import { IconPlus, IconEdit, IconArticle, IconSearch } from "@tabler/icons-react";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminArticlesPage() {
-  const articles = await getAdminArticles();
+export default async function AdminArticlesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; status?: string }>;
+}) {
+  const { q = "", status = "ALL" } = await searchParams;
+  const query = q.trim().toLowerCase();
+  const statusFilter = status === "PUBLISHED" || status === "DRAFT" ? status : "ALL";
+
+  const allArticles = await getAdminArticles();
+  const articles = allArticles.filter((article) => {
+    if (statusFilter !== "ALL" && article.status !== statusFilter) return false;
+    if (!query) return true;
+    return (
+      article.title.toLowerCase().includes(query) ||
+      article.slug.toLowerCase().includes(query)
+    );
+  });
+  const hasFilter = Boolean(query) || statusFilter !== "ALL";
 
   return (
     <div className="space-y-6">
@@ -38,21 +55,68 @@ export default async function AdminArticlesPage() {
         </Link>
       </div>
 
+      {allArticles.length > 0 && (
+        <form method="GET" className="flex flex-col sm:flex-row gap-2.5 sm:items-center">
+          <div className="relative flex-1 max-w-md">
+            <IconSearch className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-muted)]" />
+            <input
+              type="search"
+              name="q"
+              defaultValue={q}
+              placeholder="Cari judul atau slug artikel..."
+              aria-label="Cari artikel"
+              className="h-10 w-full rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] pl-9 pr-3 text-sm text-[var(--color-fg)] placeholder:text-[var(--color-muted)] focus:border-[var(--color-accent)] focus:outline-none"
+            />
+          </div>
+          <select
+            name="status"
+            defaultValue={statusFilter}
+            aria-label="Filter status artikel"
+            className="h-10 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-fg)] focus:border-[var(--color-accent)] focus:outline-none"
+          >
+            <option value="ALL">Semua Status ({allArticles.length})</option>
+            <option value="PUBLISHED">Terbit</option>
+            <option value="DRAFT">Draft</option>
+          </select>
+          <Button type="submit" variant="outline" size="sm" className="h-10">
+            Terapkan
+          </Button>
+          {hasFilter && (
+            <Link
+              href="/admin/articles"
+              className="text-xs font-semibold text-[var(--color-secondary)] hover:underline px-1"
+            >
+              Reset
+            </Link>
+          )}
+        </form>
+      )}
+
       {articles.length === 0 ? (
         <div className="border border-dashed border-[var(--color-border)] rounded-[var(--radius)] p-12 text-center bg-[var(--color-surface)]">
           <IconArticle className="w-10 h-10 text-[var(--color-muted)] mx-auto mb-3" />
           <h3 className="font-heading text-base font-semibold text-[var(--color-primary)] mb-1">
-            Belum ada artikel
+            {hasFilter ? "Tidak ada artikel yang cocok" : "Belum ada artikel"}
           </h3>
           <p className="text-sm text-[var(--color-muted)] max-w-sm mx-auto mb-4">
-            Tulis artikel panduan Android pertama untuk meningkatkan kepercayaan dan edukasi pelanggan.
+            {hasFilter
+              ? "Coba ubah kata kunci pencarian atau reset filter status."
+              : "Tulis artikel panduan Android pertama untuk meningkatkan kepercayaan dan edukasi pelanggan."}
           </p>
-          <Link href="/admin/articles/new">
-            <Button variant="secondary" size="sm" className="gap-2">
-              <IconPlus className="w-4 h-4" />
-              <span>Buat Artikel Pertama</span>
-            </Button>
-          </Link>
+          {hasFilter ? (
+            <Link href="/admin/articles">
+              <Button variant="outline" size="sm">
+                Reset Filter
+              </Button>
+            </Link>
+          ) : (
+            <Link href="/admin/articles/new">
+              <Button variant="secondary" size="sm" className="gap-2">
+                <IconPlus className="w-4 h-4" />
+                <span>Buat Artikel Pertama</span>
+              </Button>
+            </Link>
+          )}
         </div>
       ) : (
         <Table>

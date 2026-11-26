@@ -201,11 +201,25 @@ export default async function AdminDashboardPage() {
             <span>Tambah Layanan Baru</span>
           </Link>
           <Link
+            href="/admin/articles/new"
+            className="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium border border-[var(--color-border)] rounded-[var(--radius)] hover:bg-[#F1F4F6] transition-colors"
+          >
+            <IconArticle className="w-4 h-4 text-[var(--color-accent)]" />
+            <span>Tulis Artikel Baru</span>
+          </Link>
+          <Link
+            href="/admin/testimonials/new"
+            className="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium border border-[var(--color-border)] rounded-[var(--radius)] hover:bg-[#F1F4F6] transition-colors"
+          >
+            <IconStar className="w-4 h-4 text-[var(--color-accent)]" />
+            <span>Tambah Testimoni</span>
+          </Link>
+          <Link
             href="/admin/settings"
             className="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium border border-[var(--color-border)] rounded-[var(--radius)] hover:bg-[#F1F4F6] transition-colors"
           >
             <IconTool className="w-4 h-4 text-[var(--color-primary)]" />
-            <span>Atur Nomor WhatsApp & Harga</span>
+            <span>Atur Nomor WhatsApp &amp; Harga</span>
           </Link>
         </div>
       </div>
