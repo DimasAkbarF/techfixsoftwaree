@@ -13,8 +13,8 @@ const SITE_NAV = [
 export function PublicFooter() {
   return (
     <footer className="border-t border-[var(--color-border)]/70">
-      <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-12 md:grid-cols-[2fr_1fr_1fr] lg:px-8">
-        <div className="max-w-sm">
+      <div className="mx-auto grid max-w-[1200px] grid-cols-2 gap-x-6 gap-y-8 px-4 py-12 md:grid-cols-[2fr_1fr_1fr] md:gap-10 lg:px-8">
+        <div className="col-span-2 max-w-sm md:col-span-1">
           <BrandLogo className="h-10" />
           <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
             Servis software Android dari rumah. Semua pengerjaan diawali konsultasi WhatsApp dan
@@ -87,7 +87,7 @@ export function PublicFooter() {
       </div>
 
       <div className="border-t border-[var(--color-border)]">
-        <div className="mx-auto flex max-w-[1200px] flex-col gap-2 px-4 py-5 text-xs text-[var(--color-muted)] sm:flex-row sm:items-center sm:justify-between lg:px-8">
+        <div className="mx-auto flex max-w-[1200px] flex-col gap-2 px-4 pb-20 pt-5 text-xs text-[var(--color-muted)] sm:flex-row sm:items-center sm:justify-between sm:pb-5 lg:px-8">
           <p>&copy; {new Date().getFullYear()} TechFixSoftware. Harga final disepakati via WhatsApp.</p>
           <Link href="/admin" className="inline-block leading-6 hover:text-[var(--color-primary)] hover:underline">
             Masuk Admin
