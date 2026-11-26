@@ -2,7 +2,6 @@ import * as React from "react";
 import Link from "next/link";
 import { getPublishedArticles } from "@/lib/public-data";
 import { PublicHeader } from "@/components/public/public-header";
-import { HeroBackground } from "@/components/public/hero-background";
 import { PublicFooter } from "@/components/public/public-footer";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -42,13 +41,12 @@ export default async function ArticlesPublicPage() {
     <div className="page-canvas min-h-screen">
       <PublicHeader active="artikel" />
 
-      <section className="hero-shell">
-        <HeroBackground />
-        <div className="relative z-[2] mx-auto max-w-[1200px] px-4 pb-12 pt-10">
-          <h1 className="font-heading text-3xl font-bold tracking-tight text-white">
+      <section className="page-header">
+        <div className="relative z-[1] mx-auto max-w-[1200px] px-4 py-10">
+          <h1 className="font-heading text-3xl font-bold tracking-tight text-[var(--color-primary)]">
             Artikel & Panduan Servis Android
           </h1>
-          <p className="mt-2 max-w-2xl text-base text-[#D7E0E5]">
+          <p className="mt-2 max-w-2xl text-base text-[var(--color-muted)]">
             Informasi teknis seputar penyebab bootloop, cara penanganan brick, dan edukasi software perangkat Android.
           </p>
         </div>

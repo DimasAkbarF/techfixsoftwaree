@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PublicHeader } from "@/components/public/public-header";
-import { HeroBackground } from "@/components/public/hero-background";
 import { PublicFooter } from "@/components/public/public-footer";
 import { SERVICE_STEPS } from "@/lib/service-flow";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -29,14 +28,13 @@ export default function CaraKerjaPage() {
     <div className="page-canvas min-h-screen">
       <PublicHeader />
 
-      <section className="hero-shell">
-        <HeroBackground />
-        <div className="relative z-[2] mx-auto max-w-[1200px] px-4 pb-12 pt-10 lg:px-8">
+      <section className="page-header">
+        <div className="relative z-[1] mx-auto max-w-[1200px] px-4 py-10 lg:px-8">
           <div className="max-w-2xl">
-            <h1 className="font-heading text-3xl font-bold tracking-tight text-white">
+            <h1 className="font-heading text-3xl font-bold tracking-tight text-[var(--color-primary)]">
               Cara kerja layanan TechFixSoftware
             </h1>
-            <p className="mt-2 text-base leading-relaxed text-[#D7E0E5]">
+            <p className="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
               Servis software Android di TechFixSoftware berjalan dalam empat tahap: konsultasi
               keluhan via WhatsApp, kesepakatan harga awal mulai dari Rp50.000, perjanjian waktu dan
               metode, lalu pengerjaan remote (via PC dan kabel USB) atau penyerahan device sesuai
@@ -44,7 +42,7 @@ export default function CaraKerjaPage() {
             </p>
             <Link
               href="/services"
-              className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[#7DD3FC] hover:underline"
+              className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-secondary)] hover:underline"
             >
               Layanan servis software Android
               <IconArrowRight className="h-4 w-4" />
@@ -150,7 +148,7 @@ export default function CaraKerjaPage() {
           </p>
           <Link
             href="/#konsultasi"
-            className="mt-5 inline-flex h-11 items-center justify-center rounded-[12px] bg-[linear-gradient(90deg,#17ddf4_0%,#3aa9ff_100%)] px-5 text-sm font-bold text-[#06121c] shadow-[0_6px_20px_rgba(30,200,245,0.25)] transition-all hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2"
+            className="mt-5 inline-flex h-11 items-center justify-center rounded-[12px] bg-[image:var(--cta-gradient)] px-5 text-sm font-bold text-[#041a14] shadow-[var(--cta-shadow)] transition-all hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2"
           >
             Konsultasi sekarang
           </Link>

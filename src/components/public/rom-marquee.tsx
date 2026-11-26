@@ -35,7 +35,7 @@ export async function RomMarquee() {
       aria-label="Daftar Custom ROM"
       style={{
         backgroundImage:
-          "radial-gradient(ellipse 45% 220px at 0% 0%, rgba(34,208,247,.10), transparent 70%)",
+          "radial-gradient(ellipse 45% 220px at 0% 0%, rgba(16,185,129,.11), transparent 70%)",
       }}
     >
       {/* Full-bleed: pita logo tidak dibatasi container 1200px. */}

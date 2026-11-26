@@ -29,7 +29,7 @@ Karena produk ini *katalog + CMS*, sistem visual dipisah dua register namun satu
 
 Distinktivitas dibangun dari **spasi, garis rambut, dan kontras tipografi** — bukan gradien dekoratif, frosted glass, bayangan berlapis, atau sudut membulat besar. Radius global kecil (`--radius: 6px`) agar kesan "alat kerja" konsisten. Ikon wajib `@tabler/icons-react` (bukan Lucide, sesuai PRD §9).
 
-Pengecualian yang disengaja: **hero beranda** memakai satu bidang gradien gelap→terang (`hero-aurora`) dengan panel informasi semi-transparan. Seluruh halaman publik memakai satu kanvas (`page-canvas`: putih → abu sangat muda → putih) yang melanjutkan gradien hero, sehingga section tidak punya latar sendiri. Kontras antar-section dibuat oleh hairline dan kartu tipis, bukan blok warna.
+Pengecualian yang disengaja: **hero beranda** memakai satu bidang gradien gelap→terang (`hero-shell` + `HeroBackground`) yang meluruh mulus ke kanvas publik bersih (`--page-bg: #f4f7f6`). Enam halaman internal memakai header arsitektural terang (`.page-header`: tint mint halus `#eaf2ef → #f4f7f6` + micro-grid teknis + hairline bawah) agar menyatu dengan navbar terang dan menjaga konten langsung tampil *above the fold*. Kontras antar-section dibuat oleh hairline dan permukaan `#FBFDFC`/`#FFFFFF`, bukan blok warna berat.
 
 **Logo:** aset resmi `public/brand/techfix-software.png` (latar transparan) dipasang di header, footer, dan sidebar admin. Wordmark tidak diketik ulang dengan font lain agar bentuk huruf tetap sesuai logo pemilik.
 
@@ -46,8 +46,9 @@ Pengecualian yang disengaja: **hero beranda** memakai satu bidang gradien gelap�
 
   /* Brand diturunkan dari logo resmi */
   --color-primary: #0B1220;   /* navy: teks kuat, header, tombol admin */
-  --color-secondary: #0F766E; /* teal yang tetap lolos kontras teks */
-  --color-accent: #C2410C;    /* CTA WhatsApp & state aktif */
+  --color-secondary: #047857; /* emerald gelap yang lolos kontras teks (#065F46 di kanvas publik) */
+  --color-accent: #0F766E;    /* teal brand untuk link, ikon & state aktif */
+  --cta-gradient: linear-gradient(90deg, #34d399 0%, #14b8a6 100%); /* CTA WhatsApp & aksi utama */
   --color-success: #1F7A4D;
   --color-warning: #A15C07;
   --color-danger: #B3261E;

@@ -7,7 +7,7 @@ export function BrandLogo({
 }: {
   className?: string;
   priority?: boolean;
-  /** Versi putih + cyan untuk latar gelap (header transparan di beranda). */
+  /** Versi putih + teal-emerald untuk latar gelap (header transparan di beranda). */
   light?: boolean;
 }) {
   return (

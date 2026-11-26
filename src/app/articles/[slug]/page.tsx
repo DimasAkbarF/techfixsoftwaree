@@ -10,7 +10,6 @@ import { parseArticleBlocks } from "@/lib/article-blocks";
 import { pickRelatedArticles, pickRelatedServicesForArticle } from "@/lib/related-content";
 import { Button } from "@/components/ui/button";
 import { PublicHeader } from "@/components/public/public-header";
-import { HeroBackground } from "@/components/public/hero-background";
 import { PublicFooter } from "@/components/public/public-footer";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumb, clip, pageSeo, SITE_NAME } from "@/lib/seo";
@@ -124,27 +123,26 @@ export default async function ArticleDetailPage({
     <div className="page-canvas min-h-screen">
       <PublicHeader active="artikel" />
 
-      <section className="hero-shell">
-        <HeroBackground />
-        <div className="relative z-[2] mx-auto max-w-[800px] px-4 pb-12 pt-8">
-          <nav className="mb-6 flex items-center gap-2 text-xs text-[#D7E0E5]">
-            <Link href="/" className="hover:text-white hover:underline">
+      <section className="page-header">
+        <div className="relative z-[1] mx-auto max-w-[800px] px-4 py-8">
+          <nav className="mb-5 flex items-center gap-2 text-xs text-[var(--color-muted)]">
+            <Link href="/" className="hover:text-[var(--color-primary)] hover:underline">
               Beranda
             </Link>
-            <IconChevronRight className="h-3.5 w-3.5 text-white/40" />
-            <Link href="/articles" className="hover:text-white hover:underline">
+            <IconChevronRight className="h-3.5 w-3.5 text-[var(--color-muted)]/60" />
+            <Link href="/articles" className="hover:text-[var(--color-primary)] hover:underline">
               Artikel
             </Link>
-            <IconChevronRight className="h-3.5 w-3.5 text-white/40" />
-            <span className="max-w-[200px] truncate font-medium text-white sm:max-w-none">
+            <IconChevronRight className="h-3.5 w-3.5 text-[var(--color-muted)]/60" />
+            <span className="max-w-[200px] truncate font-medium text-[var(--color-primary)] sm:max-w-none">
               {article.title}
             </span>
           </nav>
 
           <header className="space-y-3">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-[#D7E0E5]">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-[var(--color-muted)]">
               <span className="inline-flex items-center gap-2">
-                <IconCalendar className="h-4 w-4 text-[#38BDF8]" />
+                <IconCalendar className="h-4 w-4 text-[var(--color-accent)]" />
                 {publishedTime ? (
                   <time dateTime={publishedTime.toISOString()}>
                     {formatTanggal(publishedTime)}
@@ -160,11 +158,11 @@ export default async function ArticleDetailPage({
                 </span>
               )}
               <span className="inline-flex items-center gap-2">
-                <IconUser className="h-4 w-4 text-[#38BDF8]" />
+                <IconUser className="h-4 w-4 text-[var(--color-accent)]" />
                 Ditulis &amp; Ditinjau oleh: {SITE_AUTHOR.name} — {SITE_AUTHOR.role}
               </span>
             </div>
-            <h1 className="font-heading text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
+            <h1 className="font-heading text-3xl font-bold leading-tight tracking-tight text-[var(--color-primary)] sm:text-4xl">
               {article.title}
             </h1>
           </header>

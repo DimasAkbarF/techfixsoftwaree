@@ -16,7 +16,7 @@ export function HeroBackground() {
         </defs>
         <path
           d="M0 332C50 270 100 232 170 218C240 205 280 185 315 140C350 95 395 40 445 0L0 0Z"
-          fill="rgba(8,40,55,.3)"
+          fill="rgba(6,52,46,.34)"
           stroke="rgba(255,255,255,.07)"
         />
         <path d="M0 160L78 72" stroke="rgba(255,255,255,.05)" fill="none" />

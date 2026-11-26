@@ -2,7 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { IconChevronDown, IconMenu2, IconX } from "@tabler/icons-react";
+import {
+  IconArrowRight,
+  IconChevronDown,
+  IconChevronLeft,
+  IconChevronRight,
+  IconMenu2,
+  IconX,
+} from "@tabler/icons-react";
 import { BrandLogo } from "@/components/brand-logo";
 
 const NAV = [
@@ -30,11 +37,11 @@ export function PublicHeaderNav({
   const [overDarkZone, setOverDarkZone] = useState(overlay);
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
-  // Saat di atas atau masih melintasi zona gelap Hero→ROM, pertahankan tinta terang;
-  // saat memasuki area Services yang terang, beralih ke permukaan terang tipis.
+  // Saat di atas hero gelap, pertahankan tinta terang;
+  // tepat saat .parallax-sheet menyentuh header, beralih ke permukaan terang.
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
@@ -43,11 +50,11 @@ export function PublicHeaderNav({
         setOverDarkZone(false);
         return;
       }
-      const rom = document.querySelector<HTMLElement>('section[aria-labelledby="rom-heading"]');
-      if (rom) {
-        setOverDarkZone(rom.getBoundingClientRect().bottom > 88);
+      const sheet = document.querySelector<HTMLElement>(".parallax-sheet");
+      if (sheet) {
+        setOverDarkZone(sheet.getBoundingClientRect().top > 80);
       } else {
-        setOverDarkZone(y < window.innerHeight * 0.96);
+        setOverDarkZone(y < window.innerHeight * 0.92);
       }
     };
     onScroll();
@@ -64,31 +71,25 @@ export function PublicHeaderNav({
     setServicesOpen(false);
   };
 
-  // Menu seluler: kunci scroll halaman, tutup dengan Escape atau klik di luar.
+  // Menu fullscreen seluler & tablet: kunci scroll halaman, fokus ke tombol tutup, tutup dengan Escape.
   useEffect(() => {
     if (!open) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    closeBtnRef.current?.focus();
 
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpen(false);
         setServicesOpen(false);
+        toggleRef.current?.focus();
       }
-    };
-    const onPointer = (event: PointerEvent) => {
-      const target = event.target as Node;
-      if (menuRef.current?.contains(target) || toggleRef.current?.contains(target)) return;
-      setOpen(false);
-      setServicesOpen(false);
     };
 
     document.addEventListener("keydown", onKey);
-    document.addEventListener("pointerdown", onPointer);
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", onKey);
-      document.removeEventListener("pointerdown", onPointer);
     };
   }, [open]);
 
@@ -116,22 +117,18 @@ export function PublicHeaderNav({
           ? "font-bold text-[var(--color-primary)] focus-visible:ring-[var(--color-accent)] after:absolute after:inset-x-3 after:bottom-0 after:h-[2px] after:rounded-full after:bg-[var(--color-accent)]"
           : "text-[var(--color-fg)]/75 hover:text-[var(--color-primary)] focus-visible:ring-[var(--color-accent)]"
         : isActive
-          ? "font-bold text-white focus-visible:ring-[#7DD3FC] focus-visible:ring-offset-[#05070b] after:absolute after:inset-x-3 after:bottom-0 after:h-[2px] after:rounded-full after:bg-[#1fdcf2]"
-          : "text-[#d3d8df] hover:text-white focus-visible:ring-[#7DD3FC] focus-visible:ring-offset-[#05070b]",
+          ? "font-bold text-white focus-visible:ring-[#6EE7B7] focus-visible:ring-offset-[#05070b] after:absolute after:inset-x-3 after:bottom-0 after:h-[2px] after:rounded-full after:bg-[#34d399]"
+          : "text-[#d3d8df] hover:text-white focus-visible:ring-[#6EE7B7] focus-visible:ring-offset-[#05070b]",
     ].join(" ");
 
-  const mobileItem = (isActive: boolean) =>
+  const fullscreenItem = (isActive: boolean) =>
     [
-      "flex h-11 w-full items-center rounded-[var(--radius)] px-3 text-sm",
-      isActive
-        ? "bg-[#F1F4F6] font-semibold text-[var(--color-primary)]"
-        : "text-[var(--color-fg)] hover:bg-[#F1F4F6]",
+      "flex w-full items-center justify-between py-3 font-heading text-3xl font-bold uppercase tracking-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6EE7B7] sm:text-4xl",
+      isActive ? "text-[#34d399]" : "text-white hover:text-[#6EE7B7]",
     ].join(" ");
-
-  const subItem =
-    "block rounded-[var(--radius)] px-3 py-2 text-[13px] leading-5 text-[var(--color-muted)] hover:bg-[#F1F4F6] hover:text-[var(--color-primary)]";
 
   return (
+    <>
     <header
       className={[
         overlay ? "fixed" : "sticky",
@@ -220,8 +217,8 @@ export function PublicHeaderNav({
             className={[
               "ml-2 hidden items-center px-5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 lg:inline-flex",
               !lightInk
-                ? "h-9 rounded-[12px] bg-[linear-gradient(90deg,#17ddf4_0%,#3aa9ff_100%)] text-sm font-bold text-[#06121c] shadow-[0_6px_20px_rgba(30,200,245,0.25)] hover:brightness-110 focus-visible:ring-[var(--color-accent)]"
-                : "h-10 rounded-[12px] border-[1.5px] border-white/90 bg-black/15 text-[15px] font-bold text-white backdrop-blur-sm hover:bg-white/15 focus-visible:ring-[#7DD3FC] focus-visible:ring-offset-[#05070b]",
+                ? "h-9 rounded-[12px] bg-[image:var(--cta-gradient)] text-sm font-bold text-[#041a14] shadow-[var(--cta-shadow)] hover:brightness-105 focus-visible:ring-[var(--color-accent)]"
+                : "h-10 rounded-[12px] border-[1.5px] border-white/90 bg-black/15 text-[15px] font-bold text-white backdrop-blur-sm hover:bg-white/15 focus-visible:ring-[#6EE7B7] focus-visible:ring-offset-[#05070b]",
             ].join(" ")}
           >
             Konsultasi
@@ -236,96 +233,166 @@ export function PublicHeaderNav({
           aria-controls="mobile-nav"
           onClick={() => (open ? close() : setOpen(true))}
           className={[
-            "flex h-10 w-10 items-center justify-center rounded-[var(--radius)] border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 lg:hidden",
+            "flex h-11 w-11 cursor-pointer items-center justify-center rounded-[var(--radius)] border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 lg:hidden",
             !lightInk
               ? "border-[var(--color-border)] text-[var(--color-primary)] hover:bg-[#F1F4F6] focus-visible:ring-[var(--color-accent)]"
-              : "border-white/25 text-white hover:bg-white/10 focus-visible:ring-[#7DD3FC] focus-visible:ring-offset-[#05070b]",
+              : "border-white/30 bg-[#07090d]/45 text-white backdrop-blur-sm hover:bg-[#07090d]/65 focus-visible:ring-[#6EE7B7] focus-visible:ring-offset-[#05070b]",
           ].join(" ")}
         >
           {open ? <IconX className="h-5 w-5" /> : <IconMenu2 className="h-5 w-5" />}
         </button>
+      </div>
+    </header>
 
-        {open && (
-          <div
-            id="mobile-nav"
-            ref={menuRef}
-            className="absolute inset-x-0 top-full mt-2 max-h-[calc(100dvh-5.5rem)] overflow-y-auto rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] p-2 shadow-[0_24px_56px_-34px_rgba(11,18,32,0.5)] lg:hidden"
+    {/* Fullscreen Mobile & Tablet Navigation Overlay (< 1024px) */}
+    {open && (
+      <div
+        id="mobile-nav"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu navigasi utama"
+        className="fixed inset-0 z-50 flex h-[100dvh] w-full flex-col justify-between overflow-hidden px-6 py-5 text-white sm:px-10 sm:py-7 lg:hidden"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 55% at 0% 100%, rgba(16,185,129,0.26) 0%, rgba(13,148,136,0.08) 52%, transparent 80%), linear-gradient(165deg, #070c14 0%, #0b1220 55%, #0d1924 100%)",
+        }}
+      >
+        {/* Top bar: tombol tutup X di kiri + logo di kanan */}
+        <div className="flex items-center justify-between">
+          <button
+            ref={closeBtnRef}
+            type="button"
+            aria-label="Tutup menu navigasi"
+            onClick={() => {
+              close();
+              toggleRef.current?.focus();
+            }}
+            className="-ml-2 flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl text-white/85 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6EE7B7]"
           >
-            <nav aria-label="Navigasi seluler" className="text-sm">
+            <IconX className="h-6 w-6" />
+          </button>
+          <BrandLogo className="h-8" light />
+        </div>
+
+        {/* Menu utama / Drill-down submenu Layanan */}
+        <nav
+          aria-label="Navigasi seluler dan tablet"
+          className="my-auto flex max-h-[calc(100dvh-13rem)] flex-col overflow-y-auto py-4"
+        >
+          {!servicesOpen ? (
+            <div className="space-y-1">
               <Link
                 href="/"
                 onClick={close}
                 aria-current={active === "beranda" ? "page" : undefined}
-                className={mobileItem(active === "beranda")}
+                className={fullscreenItem(active === "beranda")}
               >
-                Beranda
+                <span>Beranda</span>
               </Link>
 
-              <button
-                type="button"
-                aria-expanded={servicesOpen}
-                aria-controls="mobile-services"
-                onClick={() => setServicesOpen((value) => !value)}
-                className={`${mobileItem(active === "katalog")} justify-between`}
-              >
-                <span>Layanan</span>
-                <IconChevronDown
-                  className={`h-4 w-4 transition-transform ${servicesOpen ? "rotate-180" : ""}`}
-                />
-              </button>
-
-              {servicesOpen && (
-                <div
-                  id="mobile-services"
-                  className="mb-1 ml-3 border-l border-[var(--color-border)] pl-3"
+              {services.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={() => setServicesOpen(true)}
+                  className={`${fullscreenItem(active === "katalog")} cursor-pointer`}
                 >
-                  <Link href="/services" onClick={close} className={subItem}>
-                    Semua layanan
-                  </Link>
-                  <Link href="/cara-kerja" onClick={close} className={subItem}>
-                    Cara kerja
-                  </Link>
-                  {services.map((service) => (
-                    <Link
-                      key={service.slug}
-                      href={`/services/${service.slug}`}
-                      onClick={close}
-                      className={subItem}
-                    >
-                      {service.name}
-                    </Link>
-                  ))}
-                </div>
+                  <span>Layanan</span>
+                  <IconChevronRight className="h-7 w-7 shrink-0 opacity-80" />
+                </button>
+              ) : (
+                <Link
+                  href="/services"
+                  onClick={close}
+                  aria-current={active === "katalog" ? "page" : undefined}
+                  className={fullscreenItem(active === "katalog")}
+                >
+                  <span>Layanan</span>
+                </Link>
               )}
+
+              <Link
+                href="/cara-kerja"
+                onClick={close}
+                className={fullscreenItem(false)}
+              >
+                <span>Cara Kerja</span>
+              </Link>
 
               <Link
                 href="/articles"
                 onClick={close}
                 aria-current={active === "artikel" ? "page" : undefined}
-                className={mobileItem(active === "artikel")}
+                className={fullscreenItem(active === "artikel")}
               >
-                Artikel
+                <span>Artikel</span>
               </Link>
+
               <Link
                 href="/testimonials"
                 onClick={close}
                 aria-current={active === "testimoni" ? "page" : undefined}
-                className={mobileItem(active === "testimoni")}
+                className={fullscreenItem(active === "testimoni")}
               >
-                Testimoni
+                <span>Testimoni</span>
               </Link>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <button
+                type="button"
+                onClick={() => setServicesOpen(false)}
+                className="mb-2 inline-flex cursor-pointer items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#34d399] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6EE7B7]"
+              >
+                <IconChevronLeft className="h-4 w-4" />
+                Kembali
+              </button>
+              <div className="border-b border-white/15 pb-3 font-heading text-2xl font-bold uppercase tracking-tight text-white">
+                Layanan
+              </div>
+              <div className="space-y-1 pt-2">
+                <Link
+                  href="/services"
+                  onClick={close}
+                  className="flex items-center justify-between py-2.5 text-lg font-bold text-[#6EE7B7] hover:text-white"
+                >
+                  <span>Semua Layanan</span>
+                  <IconArrowRight className="h-5 w-5" />
+                </Link>
+                {services.map((service) => (
+                  <Link
+                    key={service.slug}
+                    href={`/services/${service.slug}`}
+                    onClick={close}
+                    className="block py-2.5 text-lg font-medium text-white/90 transition-colors hover:text-[#6EE7B7]"
+                  >
+                    {service.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </nav>
 
-              <Link
-                href="/#konsultasi"
-                onClick={close}
-                className="mt-2 flex h-11 items-center justify-center rounded-[12px] bg-[linear-gradient(90deg,#17ddf4_0%,#3aa9ff_100%)] text-sm font-bold text-[#06121c] shadow-[0_6px_20px_rgba(30,200,245,0.25)] hover:brightness-110"
-              >
-                Konsultasi
-              </Link>
-            </nav>
+        {/* Footer bawah overlay */}
+        <div className="space-y-3 border-t border-white/15 pt-4">
+          <Link
+            href="/#konsultasi"
+            onClick={close}
+            className="flex h-12 items-center justify-center gap-2 rounded-xl bg-[image:var(--cta-gradient)] text-sm font-bold text-[#041a14] shadow-[var(--cta-shadow)] transition-all hover:brightness-105"
+          >
+            Konsultasi via WhatsApp
+            <IconArrowRight className="h-4 w-4" />
+          </Link>
+          <div className="flex items-center justify-between text-xs text-white/60">
+            <span>Remote seluruh Indonesia &amp; Rangkasbitung</span>
+            <span className="flex items-center gap-1.5 font-medium text-[#34d399]">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#34d399]" />
+              Online
+            </span>
           </div>
-        )}
+        </div>
       </div>
-    </header>
+    )}
+    </>
   );
 }

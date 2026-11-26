@@ -8,6 +8,7 @@ import {
 } from "@/lib/public-data";
 import { PublicHeader } from "@/components/public/public-header";
 import { HeroBackground } from "@/components/public/hero-background";
+import { ParallaxHero } from "@/components/public/parallax-hero";
 import { PublicFooter } from "@/components/public/public-footer";
 import { RomMarquee } from "@/components/public/rom-marquee";
 import { ConsultationForm } from "@/components/public/consultation-form";
@@ -116,19 +117,19 @@ export default async function Home() {
       <PublicHeader active="beranda" overlay />
 
       <main id="main">
-        {/* Hero mengisi satu layar penuh; tepi bawah meluruh ke kanvas global tanpa blok pemutus. */}
-        <section className="hero-shell hero-home flex items-center">
+        {/* Hero sticky dengan efek paralaks; konten di bawahnya meluncur naik menutupi hero. */}
+        <ParallaxHero>
           <HeroBackground />
-          <div className="relative z-[2] mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-10 px-4 pb-24 pt-28 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:pb-24 lg:pt-[calc(118*var(--u))]">
+          <div className="parallax-hero__content relative z-[2] mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-10 px-4 pb-24 pt-28 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:pb-24 lg:pt-[calc(118*var(--u))]">
             <div className="lg:col-span-7">
-              <p className="hero-reveal font-medium uppercase tracking-[0.045em] text-[#1fdcf2] text-[13px] lg:text-[clamp(13px,calc(14.5*var(--u)),16px)]">
+              <p className="hero-reveal font-medium uppercase tracking-[0.045em] text-[#34d399] text-[13px] lg:text-[clamp(13px,calc(14.5*var(--u)),16px)]">
                 Jasa Servis Software Android &middot; Konsultasi &amp; Estimasi Transparan
               </p>
               <h1 className="hero-reveal hero-reveal-1 mt-4 font-heading text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.03em] md:text-[3.5rem] lg:text-[clamp(2.75rem,calc(65*var(--u)),4.25rem)] lg:leading-[0.97]">
                 <span className="bg-[linear-gradient(180deg,#ffffff_0%,#ffffff_45%,#c3c6cc_100%)] bg-clip-text text-transparent">
                   Servis software{" "}
                 </span>
-                <span className="bg-[linear-gradient(90deg,#9af0fa_0%,#33c9f7_50%,#1a9af5_100%)] bg-clip-text text-transparent">
+                <span className="bg-[linear-gradient(90deg,#a7f3d0_0%,#34d399_50%,#0d9488_100%)] bg-clip-text text-transparent">
                   Android,
                 </span>
                 <span className="bg-[linear-gradient(180deg,#ffffff_0%,#ffffff_45%,#c3c6cc_100%)] bg-clip-text text-transparent">
@@ -148,7 +149,7 @@ export default async function Home() {
               <div className="hero-reveal hero-reveal-3 mt-9 flex flex-col gap-3.5 sm:flex-row sm:items-center">
                 <a
                   href="#konsultasi"
-                  className="inline-flex h-[52px] items-center justify-center gap-2 rounded-[14px] bg-[linear-gradient(90deg,#17ddf4_0%,#3aa9ff_100%)] px-6 text-[15px] font-bold text-[#06121c] shadow-[0_8px_28px_rgba(30,200,245,0.28)] transition-all hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7DD3FC] focus-visible:ring-offset-2 focus-visible:ring-offset-[#06090F]"
+                  className="inline-flex h-[52px] items-center justify-center gap-2 rounded-[14px] bg-[image:var(--cta-gradient)] px-6 text-[15px] font-bold text-[#041a14] shadow-[0_8px_28px_rgba(16,185,129,0.30)] transition-all hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6EE7B7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#06090F]"
                 >
                   Konsultasi sekarang
                   <IconArrowRight className="h-4 w-4" />
@@ -172,7 +173,7 @@ export default async function Home() {
                   WebkitBackdropFilter: "blur(14px)",
                 }}
               >
-                <div className="border-l-[3px] border-[#1fdcf2] pl-4">
+                <div className="border-l-[3px] border-[#34d399] pl-4">
                   <dt className="text-[13px] font-medium uppercase tracking-[0.13em] text-[#cfd5de]">
                     Biaya servis
                   </dt>
@@ -181,19 +182,20 @@ export default async function Home() {
                   </dd>
                 </div>
                 <div className="mt-6 border-t border-white/20 pt-6">
-                  <dt className="border-l-[3px] border-[#1fdcf2] pl-4 text-[13px] font-medium uppercase tracking-[0.13em] text-[#cfd5de]">
+                  <dt className="border-l-[3px] border-[#34d399] pl-4 text-[13px] font-medium uppercase tracking-[0.13em] text-[#cfd5de]">
                     Tanpa toko fisik
                   </dt>
-                  <dd className="border-l-[3px] border-[#1fdcf2] pl-4 pt-2 text-sm leading-relaxed text-[#e9ecf0]">
+                  <dd className="border-l-[3px] border-[#34d399] pl-4 pt-2 text-sm leading-relaxed text-[#e9ecf0]">
                     Device tidak perlu dikirim sebelum harga dan cara pengerjaan disepakati.
                   </dd>
                 </div>
               </dl>
             </aside>
           </div>
-        </section>
+        </ParallaxHero>
 
-        <RomMarquee />
+        <div className="parallax-sheet">
+          <RomMarquee />
 
         {/* Layanan unggulan: baris bergaris, bukan grid kartu (DESIGN.md §6, §8) */}
         {services.length > 0 && (
@@ -456,9 +458,12 @@ export default async function Home() {
             </div>
           </div>
         </section>
+        </div>
       </main>
 
-      <PublicFooter />
+      <div className="relative z-10 bg-[var(--page-bg)]">
+        <PublicFooter />
+      </div>
     </div>
   );
 }
