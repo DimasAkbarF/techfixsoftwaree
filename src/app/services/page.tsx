@@ -38,16 +38,17 @@ export default async function ServicesCatalogPage() {
 
       <section className="page-header">
         <div className="relative z-[1] mx-auto max-w-[1200px] px-4 py-10">
-          <h1 className="font-heading text-3xl font-bold tracking-tight text-[var(--color-primary)]">
+          <h1 className="font-heading text-3xl font-bold tracking-tight text-white">
             Layanan servis software Android
           </h1>
-          <p className="mt-2 max-w-2xl text-base text-[var(--color-muted)]">
+          <p className="mt-2 max-w-2xl text-base text-white/75">
             Solusi teknis penanganan bootloop, brick, stuck logo, flashing ROM, root, dan downgrade.
             Harga tidak dipajang pasti; hanya kesepakatan langsung via konsultasi WhatsApp mulai dari Rp50.000.
           </p>
           <Link
             href="/cara-kerja"
-            className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-secondary)] hover:underline"
+            prefetch={true}
+            className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[#6EE7B7] hover:underline"
           >
             Cara kerja layanan
             <IconArrowRight className="h-4 w-4" />

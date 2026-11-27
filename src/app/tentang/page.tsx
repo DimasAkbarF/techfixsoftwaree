@@ -62,13 +62,13 @@ export default function TentangPage() {
       <section className="page-header">
         <div className="relative z-[1] mx-auto max-w-[1200px] px-4 py-10 lg:px-8">
           <div className="max-w-2xl">
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-accent)]">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-[#34d399]">
               Profil &amp; Standar Kerja
             </p>
-            <h1 className="mt-2 font-heading text-3xl font-bold tracking-tight text-[var(--color-primary)]">
+            <h1 className="mt-2 font-heading text-3xl font-bold tracking-tight text-white">
               Tentang {SITE_NAME}
             </h1>
-            <p className="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
+            <p className="mt-2 text-base leading-relaxed text-white/75">
               TechFixSoftware adalah layanan servis software Android jarak jauh (remote) ke seluruh
               Indonesia. Untuk layanan tatap muka (offline), lokasi dapat menyesuaikan untuk area
               Rangkasbitung dan Jabodetabek dengan tambahan biaya ongkir sesuai kesepakatan, tanpa

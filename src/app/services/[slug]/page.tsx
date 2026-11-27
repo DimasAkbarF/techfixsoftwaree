@@ -124,27 +124,27 @@ export default async function ServiceDetailPage({
 
       <section className="page-header">
         <div className="relative z-[1] mx-auto max-w-[1200px] px-4 py-8">
-          <nav className="mb-5 flex items-center gap-2 text-xs text-[var(--color-muted)]">
-            <Link href="/" className="hover:text-[var(--color-primary)] hover:underline">
+          <nav className="mb-5 flex items-center gap-2 text-xs text-white/65">
+            <Link href="/" className="hover:text-white hover:underline">
               Beranda
             </Link>
-            <IconChevronRight className="h-3.5 w-3.5 text-[var(--color-muted)]/60" />
-            <Link href="/services" className="hover:text-[var(--color-primary)] hover:underline">
+            <IconChevronRight className="h-3.5 w-3.5 text-white/40" />
+            <Link href="/services" className="hover:text-white hover:underline">
               Katalog Layanan
             </Link>
-            <IconChevronRight className="h-3.5 w-3.5 text-[var(--color-muted)]/60" />
-            <span className="font-medium text-[var(--color-primary)]">{service.name}</span>
+            <IconChevronRight className="h-3.5 w-3.5 text-white/40" />
+            <span className="font-medium text-white">{service.name}</span>
           </nav>
 
           <div className="flex items-center gap-3.5">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)]">
-              <ServiceIcon name={service.icon} className="h-7 w-7 text-[var(--color-accent)]" />
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--radius)] border border-white/15 bg-white/10">
+              <ServiceIcon name={service.icon} className="h-7 w-7 text-[#34d399]" />
             </div>
             <div>
-              <span className="rounded-[var(--radius)] bg-[#0F766E]/10 px-2.5 py-0.5 text-xs font-semibold text-[var(--color-accent)]">
+              <span className="rounded-[var(--radius)] bg-[#34d399]/15 px-2.5 py-0.5 text-xs font-semibold text-[#6EE7B7]">
                 {service.category}
               </span>
-              <h1 className="mt-1 font-heading text-2xl font-bold tracking-tight text-[var(--color-primary)] md:text-3xl">
+              <h1 className="mt-1 font-heading text-2xl font-bold tracking-tight text-white md:text-3xl">
                 {service.name}
               </h1>
             </div>

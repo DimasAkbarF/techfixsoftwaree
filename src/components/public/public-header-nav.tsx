@@ -256,11 +256,7 @@ export function PublicHeaderNav({
         role="dialog"
         aria-modal="true"
         aria-label="Menu navigasi utama"
-        className="fixed inset-0 z-50 flex h-[100dvh] w-full flex-col justify-between overflow-hidden px-6 py-5 text-white sm:px-10 sm:py-7 lg:hidden"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 55% at 0% 100%, rgba(16,185,129,0.26) 0%, rgba(13,148,136,0.08) 52%, transparent 80%), linear-gradient(165deg, #070c14 0%, #0b1220 55%, #0d1924 100%)",
-        }}
+        className="mobile-nav-overlay fixed inset-0 z-50 flex h-[100dvh] w-full flex-col justify-between overflow-hidden px-6 py-5 text-white sm:px-10 sm:py-7 lg:hidden"
       >
         {/* Top bar: tombol tutup X di kiri + logo di kanan */}
         <div className="flex items-center justify-between">

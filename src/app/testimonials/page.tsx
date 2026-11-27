@@ -37,10 +37,10 @@ export default async function TestimonialsPublicPage() {
 
       <section className="page-header">
         <div className="relative z-[1] mx-auto max-w-[1200px] px-4 py-10">
-          <h1 className="font-heading text-3xl font-bold tracking-tight text-[var(--color-primary)]">
+          <h1 className="font-heading text-3xl font-bold tracking-tight text-white">
             Testimoni & Bukti Servis Pelanggan
           </h1>
-          <p className="mt-2 max-w-2xl text-base text-[var(--color-muted)]">
+          <p className="mt-2 max-w-2xl text-base text-white/75">
             Ulasan dan dokumentasi kasus dari pelanggan yang perangkatnya telah ditangani TechFixSoftware.
             Bukti diambil langsung dari tangkapan layar komunikasi pelanggan.
           </p>

@@ -31,10 +31,10 @@ export default function CaraKerjaPage() {
       <section className="page-header">
         <div className="relative z-[1] mx-auto max-w-[1200px] px-4 py-10 lg:px-8">
           <div className="max-w-2xl">
-            <h1 className="font-heading text-3xl font-bold tracking-tight text-[var(--color-primary)]">
+            <h1 className="font-heading text-3xl font-bold tracking-tight text-white">
               Cara kerja layanan TechFixSoftware
             </h1>
-            <p className="mt-2 text-base leading-relaxed text-[var(--color-muted)]">
+            <p className="mt-2 text-base leading-relaxed text-white/75">
               Servis software Android di TechFixSoftware berjalan dalam empat tahap: konsultasi
               keluhan via WhatsApp, kesepakatan harga awal mulai dari Rp50.000, perjanjian waktu dan
               metode, lalu pengerjaan remote (via PC dan kabel USB) atau penyerahan device sesuai
@@ -42,7 +42,8 @@ export default function CaraKerjaPage() {
             </p>
             <Link
               href="/services"
-              className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-secondary)] hover:underline"
+              prefetch={true}
+              className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[#6EE7B7] hover:underline"
             >
               Layanan servis software Android
               <IconArrowRight className="h-4 w-4" />

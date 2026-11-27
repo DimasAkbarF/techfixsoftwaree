@@ -77,6 +77,14 @@ body {
   overflow-x: clip;
 }
 
+.page-canvas,
+.parallax-sheet {
+  background-image:
+    linear-gradient(rgba(11, 18, 32, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 18, 32, 0.035) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+}
+
 h1, h2, h3, h4, h5, h6, .font-heading {
   font-family: var(--font-heading);
 }
@@ -120,10 +128,11 @@ code, pre, .font-mono {
 .page-header {
   position: relative;
   overflow: hidden;
+  color: #ffffff;
   background:
-    radial-gradient(ellipse 52% 110% at 92% -10%, rgba(16, 185, 129, 0.10) 0%, rgba(13, 148, 136, 0.04) 48%, transparent 75%),
-    linear-gradient(180deg, #eaf2ef 0%, #f4f7f6 100%);
-  border-bottom: 1px solid var(--color-border);
+    radial-gradient(ellipse 55% 110% at 92% 0%, rgba(16, 185, 129, 0.22) 0%, rgba(13, 148, 136, 0.07) 48%, transparent 76%),
+    linear-gradient(165deg, #070c14 0%, #0b1220 58%, #0d1924 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .page-header::before {
@@ -132,11 +141,64 @@ code, pre, .font-mono {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(11, 18, 32, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(11, 18, 32, 0.04) 1px, transparent 1px);
-  background-size: 48px 48px;
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
   -webkit-mask-image: radial-gradient(ellipse 55% 95% at 88% 20%, #000 15%, transparent 75%);
   mask-image: radial-gradient(ellipse 55% 95% at 88% 20%, #000 15%, transparent 75%);
+}
+
+.public-footer {
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+  color: #ffffff;
+  background:
+    radial-gradient(ellipse 70% 55% at 0% 100%, rgba(16, 185, 129, 0.26) 0%, rgba(13, 148, 136, 0.08) 52%, transparent 80%),
+    linear-gradient(165deg, #070c14 0%, #0b1220 55%, #0d1924 100%);
+}
+
+.public-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  -webkit-mask-image: radial-gradient(ellipse 75% 95% at 14% 88%, #000 18%, transparent 82%);
+  mask-image: radial-gradient(ellipse 75% 95% at 14% 88%, #000 18%, transparent 82%);
+}
+
+.public-footer > div {
+  position: relative;
+  z-index: 1;
+}
+
+.mobile-nav-overlay {
+  color: #ffffff;
+  background:
+    radial-gradient(ellipse 70% 55% at 0% 100%, rgba(16, 185, 129, 0.26) 0%, rgba(13, 148, 136, 0.08) 52%, transparent 80%),
+    linear-gradient(165deg, #070c14 0%, #0b1220 55%, #0d1924 100%);
+}
+
+.mobile-nav-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  -webkit-mask-image: radial-gradient(ellipse 85% 85% at 25% 70%, #000 25%, transparent 90%);
+  mask-image: radial-gradient(ellipse 85% 85% at 25% 70%, #000 25%, transparent 90%);
+}
+
+.mobile-nav-overlay > * {
+  position: relative;
+  z-index: 1;
 }
 
 .hero-bg {
@@ -244,6 +306,7 @@ code, pre, .font-mono {
 @media (max-width: 900px) {
   :root {
     --hero-fade-h: clamp(120px, 20vh, 200px);
+    --grid-size: 36px;
   }
 
   .hero-bg__grid-light,
