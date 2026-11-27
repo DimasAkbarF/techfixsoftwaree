@@ -31,6 +31,9 @@ import {
   IconDownload,
   IconTrash,
   IconHistory,
+  IconLink,
+  IconCash,
+  IconTrendingUp,
 } from "@tabler/icons-react";
 import { LeadStatus } from "@prisma/client";
 import { formatRupiah } from "@/lib/phone";
@@ -85,10 +88,42 @@ function toLocalInput(value: Date | string | null) {
   return local.toISOString().slice(0, 16);
 }
 
-function whatsappLink(lead: LeadItem) {
+function whatsappLink(lead: LeadItem, customText?: string) {
   if (!lead.phone) return null;
-  const text = `Halo ${lead.name}, saya dari TechFixSoftware. Menindaklanjuti konsultasi servis ${lead.deviceType} yang Anda kirim.`;
+  const text =
+    customText ||
+    `Halo ${lead.name}, saya dari TechFixSoftware. Menindaklanjuti konsultasi servis ${lead.deviceType} yang Anda kirim.`;
   return `https://wa.me/${lead.phone}?text=${encodeURIComponent(text)}`;
+}
+
+function getTicketCode(leadId: string) {
+  return leadId.slice(-6).toUpperCase();
+}
+
+function buildQuickTemplates(lead: LeadItem, trackingUrl: string) {
+  const ticket = getTicketCode(lead.id);
+  return [
+    {
+      id: "kronologi",
+      label: "Tanya Kronologi",
+      text: `Halo ${lead.name}, saya dari TechFixSoftware. Untuk ${lead.deviceType} dengan kendala yang dilaporkan, boleh dibantu info singkat:\n1. Awal mula kejadiannya bagaimana?\n2. Apakah masih bisa masuk mode Fastboot / Recovery?\n3. Apakah tersedia PC/laptop Windows + kabel data USB untuk pengerjaan remote?`,
+    },
+    {
+      id: "anydesk",
+      label: "Panduan AnyDesk & USB",
+      text: `Halo ${lead.name}, untuk sesi servis remote ${lead.deviceType}, silakan siapkan:\n1. Instal AnyDesk di PC/laptop Windows\n2. Pastikan baterai HP minimal 50% dan gunakan kabel USB yang stabil\n3. Kirimkan 9-10 digit kode AnyDesk Anda di sini jika sudah siap.`,
+    },
+    {
+      id: "jadwal",
+      label: "Konfirmasi Jadwal",
+      text: `Halo ${lead.name}, jadwal pengerjaan servis ${lead.deviceType} sudah kami catat (Tiket #${ticket}).\nAnda dapat memantau progres pengerjaan kapan saja di:\n${trackingUrl}\n(Gunakan kode tiket ${ticket} dan 4 digit terakhir nomor WA Anda).`,
+    },
+    {
+      id: "testimoni",
+      label: "Follow-up & Testimoni",
+      text: `Halo ${lead.name}, bagaimana kondisi ${lead.deviceType} setelah selesai ditangani? Semoga sudah kembali normal dan lancar digunakan. Jika berkenan, boleh kirimkan sedikit ulasan untuk testimoni pelanggan TechFixSoftware. Terima kasih!`,
+    },
+  ];
 }
 
 export function LeadsManager({ initialLeads }: { initialLeads: LeadItem[] }) {
@@ -107,6 +142,7 @@ export function LeadsManager({ initialLeads }: { initialLeads: LeadItem[] }) {
     selectedLead?.agreedPrice ? String(selectedLead.agreedPrice) : ""
   );
   const [feedbackMsg, setFeedbackMsg] = React.useState<string | null>(null);
+  const [copiedTrackLink, setCopiedTrackLink] = React.useState(false);
 
   React.useEffect(() => {
     setNoteText(selectedLead?.adminNote || "");
@@ -115,7 +151,34 @@ export function LeadsManager({ initialLeads }: { initialLeads: LeadItem[] }) {
       selectedLead?.agreedPrice ? String(selectedLead.agreedPrice) : ""
     );
     setFeedbackMsg(null);
+    setCopiedTrackLink(false);
   }, [selectedLead]);
+
+  const metrics = React.useMemo(() => {
+    const total = leads.length;
+    const doneCount = leads.filter((l) => l.status === "DONE").length;
+    const activeCount = leads.filter(
+      (l) => l.status === "NEW" || l.status === "CONTACTED" || l.status === "SCHEDULED"
+    ).length;
+    const conversionRate = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+
+    const now = new Date();
+    const curMonth = now.getMonth();
+    const curYear = now.getFullYear();
+
+    let totalRevenue = 0;
+    let monthlyRevenue = 0;
+    for (const l of leads) {
+      if (l.status === "CANCELLED" || !l.agreedPrice || l.agreedPrice <= 0) continue;
+      totalRevenue += l.agreedPrice;
+      const d = new Date(l.createdAt);
+      if (d.getMonth() === curMonth && d.getFullYear() === curYear) {
+        monthlyRevenue += l.agreedPrice;
+      }
+    }
+
+    return { total, doneCount, activeCount, conversionRate, totalRevenue, monthlyRevenue };
+  }, [leads]);
 
   const filteredLeads = React.useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -225,6 +288,22 @@ export function LeadsManager({ initialLeads }: { initialLeads: LeadItem[] }) {
   ];
 
   const waLink = selectedLead ? whatsappLink(selectedLead) : null;
+  const trackingUrl = selectedLead
+    ? `${typeof window !== "undefined" ? window.location.origin : "https://techfixsoftware.web.id"}/cek-servis?ticket=${getTicketCode(selectedLead.id)}`
+    : "";
+  const quickTemplates = selectedLead ? buildQuickTemplates(selectedLead, trackingUrl) : [];
+
+  const handleCopyTrackLink = async () => {
+    if (!trackingUrl) return;
+    try {
+      await navigator.clipboard.writeText(trackingUrl);
+      setCopiedTrackLink(true);
+      window.setTimeout(() => setCopiedTrackLink(false), 2000);
+    } catch {
+      setFeedbackMsg("Gagal menyalin link status.");
+    }
+  };
+
   const isOverdue =
     selectedLead?.nextFollowUpAt &&
     new Date(selectedLead.nextFollowUpAt).getTime() < Date.now() &&
@@ -233,6 +312,61 @@ export function LeadsManager({ initialLeads }: { initialLeads: LeadItem[] }) {
 
   return (
     <div className="space-y-6">
+      {/* Bar metrik ringkas: Total Lead, Conversion Rate, Omzet Bulan Ini, Total Omzet */}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <div className="rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+          <div className="flex items-center justify-between text-xs text-[var(--color-muted)]">
+            <span>Total Lead</span>
+            <IconUsers className="h-4 w-4 text-[var(--color-muted)]" />
+          </div>
+          <div className="mt-1.5 font-heading text-2xl font-bold text-[var(--color-primary)]">
+            {metrics.total}
+          </div>
+          <div className="mt-0.5 text-[11px] text-[var(--color-muted)]">
+            {metrics.activeCount} sedang aktif
+          </div>
+        </div>
+
+        <div className="rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+          <div className="flex items-center justify-between text-xs text-[var(--color-muted)]">
+            <span>Conversion Rate</span>
+            <IconTrendingUp className="h-4 w-4 text-[var(--color-accent)]" />
+          </div>
+          <div className="mt-1.5 font-heading text-2xl font-bold text-[var(--color-primary)]">
+            {metrics.conversionRate}%
+          </div>
+          <div className="mt-0.5 text-[11px] text-[var(--color-muted)]">
+            {metrics.doneCount} dari {metrics.total} selesai
+          </div>
+        </div>
+
+        <div className="rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+          <div className="flex items-center justify-between text-xs text-[var(--color-muted)]">
+            <span>Omzet Bulan Ini</span>
+            <IconCash className="h-4 w-4 text-[var(--color-accent)]" />
+          </div>
+          <div className="mt-1.5 font-heading text-xl font-bold text-[var(--color-primary)] truncate">
+            {formatRupiah(metrics.monthlyRevenue)}
+          </div>
+          <div className="mt-0.5 text-[11px] text-[var(--color-muted)]">
+            Dari kesepakatan non-batal
+          </div>
+        </div>
+
+        <div className="rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+          <div className="flex items-center justify-between text-xs text-[var(--color-muted)]">
+            <span>Total Omzet</span>
+            <IconCash className="h-4 w-4 text-[var(--color-muted)]" />
+          </div>
+          <div className="mt-1.5 font-heading text-xl font-bold text-[var(--color-primary)] truncate">
+            {formatRupiah(metrics.totalRevenue)}
+          </div>
+          <div className="mt-0.5 text-[11px] text-[var(--color-muted)]">
+            Akumulasi seluruh lead
+          </div>
+        </div>
+      </div>
+
       {/* Toolbar: filter status + pencarian + ekspor */}
       <div className="flex flex-col gap-3 border-b border-[var(--color-border)] pb-3 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0">
@@ -375,8 +509,27 @@ export function LeadsManager({ initialLeads }: { initialLeads: LeadItem[] }) {
                   <h3 className="font-heading text-xl font-bold text-[var(--color-primary)] mt-1">
                     {selectedLead.name}
                   </h3>
-                  <div className="text-xs text-[var(--color-muted)] mt-0.5">
-                    ID: <span className="font-mono">{selectedLead.id}</span>
+                  <div className="text-xs text-[var(--color-muted)] mt-0.5 flex flex-wrap items-center gap-2">
+                    <span>
+                      Tiket: <span className="font-mono font-semibold text-[var(--color-primary)]">#{getTicketCode(selectedLead.id)}</span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleCopyTrackLink}
+                      className="inline-flex cursor-pointer items-center gap-1 rounded border border-[var(--color-border)] bg-[#F9FAFB] px-2 py-0.5 text-[11px] font-medium text-[var(--color-primary)] hover:bg-[#F1F4F6]"
+                    >
+                      {copiedTrackLink ? (
+                        <>
+                          <IconCheck className="h-3 w-3 text-[#15803D]" />
+                          <span>Link Tersalin</span>
+                        </>
+                      ) : (
+                        <>
+                          <IconLink className="h-3 w-3" />
+                          <span>Salin Link Status</span>
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
                 <Badge
@@ -418,6 +571,31 @@ export function LeadsManager({ initialLeads }: { initialLeads: LeadItem[] }) {
                       </a>
                     )}
                   </div>
+                  {selectedLead.phone && (
+                    <div className="mt-2.5 space-y-1.5">
+                      <span className="text-[11px] font-medium text-[var(--color-muted)]">
+                        Template Balasan Cepat WA:
+                      </span>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        {quickTemplates.map((tpl) => {
+                          const href = whatsappLink(selectedLead, tpl.text);
+                          if (!href) return null;
+                          return (
+                            <a
+                              key={tpl.id}
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center justify-center gap-1 rounded-[var(--radius)] border border-[var(--color-border)] bg-[#F9FAFB] px-2 py-1.5 text-[11px] font-medium text-[var(--color-primary)] transition-colors hover:border-[var(--color-accent)] hover:bg-emerald-50/50"
+                            >
+                              <IconBrandWhatsapp className="h-3.5 w-3.5 shrink-0 text-[#15803D]" />
+                              <span className="truncate">{tpl.label}</span>
+                            </a>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div>
