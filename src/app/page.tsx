@@ -18,6 +18,7 @@ import { leadParagraph, pageSeo } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/json-ld";
 import {
   IconArrowRight,
+  IconChevronDown,
   IconDeviceMobile,
   IconMessageCircle,
   IconStarFilled,
@@ -39,6 +40,34 @@ const PREPARATION = [
   { icon: IconUsb, title: "Kabel USB", body: "Sesuai konektor device Anda." },
   { icon: IconMessageCircle, title: "Keluhan", body: "Kapan mulai, apa yang berubah sebelumnya." },
 ];
+
+const HOME_FAQS = [
+  {
+    question: "Apa itu TechFixSoftware dan layanan apa yang disediakan?",
+    answer:
+      "TechFixSoftware adalah spesialis servis software Android profesional yang melayani perbaikan secara remote jarak jauh ke seluruh Indonesia dan tatap muka di Rangkasbitung. Layanan meliputi perbaikan bootloop, hardbrick/unbrick (EDL/Fastboot), stuck logo, flashing firmware resmi, root Magisk/KernelSU, install custom ROM, unlock bootloader (UBL), bypass FRP, dan downgrade Android.",
+  },
+  {
+    question: "Bagaimana cara kerja servis software Android jarak jauh (remote)?",
+    answer:
+      "Klien cukup menyediakan PC/Laptop Windows dan kabel data USB. Teknisi TechFixSoftware akan menghubungkan sistem melalui aplikasi remote seperti UltraViewer, AnyDesk, atau TeamViewer untuk melakukan diagnosa dan eksekusi flashing langsung di komputer klien.",
+  },
+  {
+    question: "Berapa biaya servis software Android di TechFixSoftware?",
+    answer:
+      "Biaya servis mulai dari Rp50.000 tergantung tingkat kerusakan dan tipe perangkat. Biaya final disepakati di muka via konsultasi WhatsApp sebelum pengerjaan dimulai, tanpa biaya tersembunyi.",
+  },
+  {
+    question: "Apakah servis software Android secara remote aman?",
+    answer:
+      "Sangat aman. Klien dapat memantau setiap langkah yang dilakukan teknisi secara langsung di layar komputer mereka secara real-time.",
+  },
+  {
+    question: "Merek HP Android apa saja yang bisa diperbaiki di TechFixSoftware?",
+    answer:
+      "Hampir semua merek Android dapat ditangani, termasuk Xiaomi, Redmi, Poco, Samsung, Realme, Oppo, Vivo, Asus ROG/Zenfone, Infinix, Tecno, Google Pixel, OnePlus, dan Motorola.",
+  },
+] as const;
 
 function formatDate(date: Date | string | null) {
   if (!date) return "Baru saja";
@@ -67,48 +96,14 @@ export default async function Home() {
   const homeFaqLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Apa itu TechFixSoftware dan layanan apa yang disediakan?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "TechFixSoftware adalah spesialis servis software Android profesional yang melayani perbaikan secara remote jarak jauh ke seluruh Indonesia dan tatap muka di Rangkasbitung. Layanan meliputi perbaikan bootloop, hardbrick/unbrick (EDL/Fastboot), stuck logo, flashing firmware resmi, root Magisk/KernelSU, install custom ROM, unlock bootloader (UBL), bypass FRP, dan downgrade Android.",
-        },
+    mainEntity: HOME_FAQS.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
       },
-      {
-        "@type": "Question",
-        name: "Bagaimana cara kerja servis software Android jarak jauh (remote)?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Klien cukup menyediakan PC/Laptop Windows dan kabel data USB. Teknisi TechFixSoftware akan menghubungkan sistem melalui aplikasi remote seperti UltraViewer, AnyDesk, atau TeamViewer untuk melakukan diagnosa dan eksekusi flashing langsung di komputer klien.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Berapa biaya servis software Android di TechFixSoftware?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Biaya servis mulai dari Rp50.000 tergantung tingkat kerusakan dan tipe perangkat. Biaya final disepakati di muka via konsultasi WhatsApp sebelum pengerjaan dimulai, tanpa biaya tersembunyi.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Apakah servis software Android secara remote aman?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Sangat aman. Klien dapat memantau setiap langkah yang dilakukan teknisi secara langsung di layar komputer mereka secara real-time.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Merek HP Android apa saja yang bisa diperbaiki di TechFixSoftware?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Hampir semua merek Android dapat ditangani, termasuk Xiaomi, Redmi, Poco, Samsung, Realme, Oppo, Vivo, Asus ROG/Zenfone, Infinix, Tecno, Google Pixel, OnePlus, dan Motorola.",
-        },
-      },
-    ],
+    })),
   };
 
   return (
@@ -437,6 +432,37 @@ export default async function Home() {
           </section>
         )}
 
+        {/* Pertanyaan Umum (selaras 1:1 dengan JSON-LD FAQPage) */}
+        <section aria-labelledby="faq-heading">
+          <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-8 px-4 py-14 lg:grid-cols-12 lg:px-8">
+            <div className="lg:col-span-4">
+              <h2
+                id="faq-heading"
+                className="font-heading text-[1.75rem] font-bold leading-tight tracking-[-0.01em] text-[var(--color-primary)]"
+              >
+                Pertanyaan umum
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
+                Jawaban singkat seputar layanan remote, keamanan data, merek perangkat, dan biaya
+                servis.
+              </p>
+            </div>
+            <div className="divide-y divide-[var(--color-border)] border-y border-[var(--color-border)] lg:col-span-8">
+              {HOME_FAQS.map((item, idx) => (
+                <details key={item.question} open={idx === 0} className="group py-4">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-heading text-sm font-semibold text-[var(--color-primary)] sm:text-base [&::-webkit-details-marker]:hidden">
+                    <span>{item.question}</span>
+                    <IconChevronDown className="h-4 w-4 shrink-0 text-[var(--color-muted)] transition-transform duration-200 group-open:rotate-180" />
+                  </summary>
+                  <p className="mt-2.5 pr-6 text-sm leading-relaxed text-[var(--color-muted)]">
+                    {item.answer}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Form konsultasi (DEC-003) */}
         <section
           id="konsultasi"
@@ -464,9 +490,7 @@ export default async function Home() {
         </div>
       </main>
 
-      <div className="relative z-10 bg-[var(--page-bg)]">
-        <PublicFooter />
-      </div>
+      <PublicFooter />
     </div>
   );
 }

@@ -20,8 +20,10 @@ const HEADERS = [
 ];
 
 function csvCell(value: string | number | null | undefined) {
-  const text = value === null || value === undefined ? "" : String(value);
-  return `"${text.replace(/"/g, '""')}"`;
+  const raw = value === null || value === undefined ? "" : String(value);
+  // Cegah formula injection di Excel / Google Sheets (OWASP CSV Injection).
+  const safe = /^[=+\-@\t\r]/.test(raw) ? `'${raw}` : raw;
+  return `"${safe.replace(/"/g, '""')}"`;
 }
 
 function toLocalString(date: Date | null) {

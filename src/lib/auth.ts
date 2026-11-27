@@ -38,8 +38,17 @@ function buildTrustedOrigins() {
   return Array.from(origins);
 }
 
+function resolveAuthSecret() {
+  const secret = process.env.BETTER_AUTH_SECRET?.trim();
+  if (secret) return secret;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("BETTER_AUTH_SECRET wajib diset pada environment production.");
+  }
+  return "development-secret-techfixsoftware-key-min-32-chars";
+}
+
 export const auth = betterAuth({
-  secret: process.env.BETTER_AUTH_SECRET || "development-secret-techfixsoftware-key-min-32-chars",
+  secret: resolveAuthSecret(),
   baseURL: resolveBaseUrl(),
   trustedOrigins: buildTrustedOrigins(),
   database: prismaAdapter(prisma, {

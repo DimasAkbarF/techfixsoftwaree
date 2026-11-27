@@ -5,6 +5,8 @@ import { getPublicSiteSetting } from "@/lib/public-data";
 import { SITE_AUTHOR, SITE_NAME, SITE_URL } from "@/lib/site";
 import { JsonLd } from "@/components/seo/json-ld";
 import { RouteProgress } from "@/components/common/route-progress";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 // Font di-self-host agar tidak ada request render-blocking ke fonts.googleapis.com.
@@ -63,8 +65,20 @@ export const metadata: Metadata = {
   },
   verification: {
     other: {
-      "msvalidate.01": "EC630AC9AE8193380276A1EB46EA62FE",
+      "msvalidate.01": [
+        "EC630AC9AE8193380276A1EB46EA62FE",
+        "360890CDEE11ED8812C8D15ACA400FE4",
+      ],
     },
+  },
+  icons: {
+    icon: [
+      { url: "/icons/icon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    shortcut: "/icons/icon-48x48.png",
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
     type: "website",
@@ -211,6 +225,8 @@ export default async function RootLayout({
         </Suspense>
         <JsonLd data={organization} />
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
