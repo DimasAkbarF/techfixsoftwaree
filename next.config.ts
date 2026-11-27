@@ -17,6 +17,36 @@ const nextConfig: NextConfig = {
       static: 300,
     },
   },
+  async redirects() {
+    return [
+      // Pemulihan 100% ranking URL lama yang masih terindeks di Google Search Console
+      { source: "/about", destination: "/tentang", permanent: true },
+      { source: "/how-it-works", destination: "/cara-kerja", permanent: true },
+      { source: "/remote-guide", destination: "/cara-kerja", permanent: true },
+      { source: "/faq", destination: "/#faq", permanent: true },
+      { source: "/terms", destination: "/tentang", permanent: true },
+      { source: "/disclaimer", destination: "/tentang", permanent: true },
+      { source: "/categories", destination: "/services", permanent: true },
+      { source: "/categories/:slug", destination: "/services/:slug", permanent: true },
+      {
+        source: "/guides/cara-mengatasi-hp-xiaomi-bootloop-stuck-logo-mi",
+        destination: "/merek/xiaomi-poco",
+        permanent: true,
+      },
+      {
+        source: "/guides/cara-mengatasi-hp-samsung-stuck-di-logo",
+        destination: "/articles/cara-mengatasi-hp-samsung-stuck-di-logo",
+        permanent: true,
+      },
+      {
+        source: "/guides/soft-brick-vs-hard-brick-perbedaan-dan-solusi",
+        destination: "/articles/soft-brick-vs-hard-brick-perbedaan-dan-solusi",
+        permanent: true,
+      },
+      { source: "/guides", destination: "/articles", permanent: true },
+      { source: "/guides/:slug", destination: "/articles", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {
@@ -29,6 +59,10 @@ const nextConfig: NextConfig = {
           {
             key: "Strict-Transport-Security",
             value: "max-age=63072000; includeSubDomains; preload",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
           },
         ],
       },

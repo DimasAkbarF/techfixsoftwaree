@@ -4,6 +4,7 @@ import {
   getPublishedServices,
 } from "@/lib/public-data";
 import { SITE_AUTHOR, SITE_NAME, SITE_URL } from "@/lib/site";
+import { BRAND_PROFILES } from "@/lib/brands";
 import { leadParagraph } from "@/lib/seo";
 
 export const revalidate = 300;
@@ -35,11 +36,18 @@ export async function GET() {
     "",
     "## Halaman Utama",
     `- [Beranda](${SITE_URL}/): Profil layanan, katalog ROM, testimoni pelanggan, dan form konsultasi langsung WhatsApp.`,
+    `- [Diagnosa Cepat Interaktif](${SITE_URL}/diagnosa): Cek gejala kerusakan software Android dalam 3 klik untuk estimasi tindakan & risiko data.`,
+    `- [Cek Status Servis](${SITE_URL}/cek-servis): Pelacakan progres pengerjaan tiket servis secara real-time.`,
     `- [Katalog Layanan](${SITE_URL}/services): Daftar lengkap servis software Android per kategori kerusakan.`,
     `- [Cara Kerja Layanan](${SITE_URL}/cara-kerja): 4 tahap alur servis (konsultasi keluhan via WA -> kesepakatan harga -> persiapan bahan -> eksekusi remote/offline).`,
     `- [Artikel & Panduan](${SITE_URL}/articles): Basis pengetahuan dan solusi masalah teknis software Android.`,
     `- [Testimoni & Bukti Servis](${SITE_URL}/testimonials): Tangkapan layar bukti keberhasilan servis dari pelanggan riil.`,
     `- [Dokumentasi Lengkap LLM](${SITE_URL}/llms-full.txt): Dokumentasi teknis komprehensif untuk agen AI.`,
+    "",
+    "## Spesialis Merek Android",
+    ...BRAND_PROFILES.map(
+      (b) => `- **[Servis Software ${b.name}](${SITE_URL}/merek/${b.slug})**: ${b.heroSubtitle}`
+    ),
     "",
     "## Katalog Layanan Spesialis",
     ...services.map(

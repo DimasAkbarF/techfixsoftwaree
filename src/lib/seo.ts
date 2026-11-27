@@ -50,7 +50,7 @@ export function pageSeo({
       description,
       url: path,
     },
-    twitter: { card: "summary", title, description },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 

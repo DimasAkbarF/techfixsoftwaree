@@ -14,6 +14,7 @@ import { RomMarquee } from "@/components/public/rom-marquee";
 import { ConsultationForm } from "@/components/public/consultation-form";
 import { ServiceIcon } from "@/components/common/service-icon";
 import { SERVICE_STEPS } from "@/lib/service-flow";
+import { BRAND_PROFILES } from "@/lib/brands";
 import { leadParagraph, pageSeo } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/json-ld";
 import {
@@ -29,9 +30,9 @@ import {
 export const revalidate = 300;
 
 export const metadata: Metadata = pageSeo({
-  title: "Jasa Servis Software Android Remote & Rangkasbitung — TechFixSoftware",
+  title: "Jasa Root, Unbrick & Fix Bootloop Android — TechFixSoftware",
   description:
-    "Jasa servis software Android remote seluruh Indonesia & Rangkasbitung: fix bootloop, unbrick, stuck logo, flash firmware, root, custom ROM, unlock bootloader, dan downgrade. Konsultasi WhatsApp, harga disepakati dulu.",
+    "Jasa root Android (Magisk/KernelSU), unbrick EDL 9008, fix bootloop, custom ROM & flash firmware secara remote se-Indonesia. Konsultasi WA, mulai Rp50.000.",
   path: "/",
 });
 
@@ -118,27 +119,25 @@ export default async function Home() {
           <div className="parallax-hero__content relative z-[2] mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-10 px-4 pb-24 pt-28 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:pb-24 lg:pt-[calc(118*var(--u))]">
             <div className="lg:col-span-7">
               <p className="font-medium uppercase tracking-[0.045em] text-[#34d399] text-[13px] lg:text-[clamp(13px,calc(14.5*var(--u)),16px)]">
-                Jasa Servis Software Android &middot; Konsultasi &amp; Estimasi Transparan
+                Jasa Root Android &middot; Unbrick EDL 9008 &middot; Fix Bootloop &amp; Custom ROM
               </p>
               <h1 className="mt-4 font-heading text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.03em] md:text-[3.5rem] lg:text-[clamp(2.75rem,calc(65*var(--u)),4.25rem)] lg:leading-[0.97]">
                 <span className="bg-[linear-gradient(180deg,#ffffff_0%,#ffffff_45%,#c3c6cc_100%)] bg-clip-text text-transparent">
-                  Servis software{" "}
-                </span>
+                  Servis software
+                </span>{" "}
                 <span className="bg-[linear-gradient(90deg,#a7f3d0_0%,#34d399_50%,#0d9488_100%)] bg-clip-text text-transparent">
                   Android,
-                </span>
+                </span>{" "}
                 <span className="bg-[linear-gradient(180deg,#ffffff_0%,#ffffff_45%,#c3c6cc_100%)] bg-clip-text text-transparent">
-                  {" "}
                   tanpa perlu ke toko.
                 </span>
               </h1>
               <p className="hero-reveal hero-reveal-2 mt-6 max-w-xl text-base leading-[1.55] text-[#aeb4bd] lg:text-[clamp(1rem,calc(19.5*var(--u)),1.25rem)] lg:leading-[1.51]">
-                Bootloop, brick, stuck logo, flashing firmware, root, dan downgrade. Konsultasi
-                dulu{" "}
+                Jasa root Magisk/KernelSU, unbrick mati total, fix bootloop, stuck logo, custom ROM,
+                dan flash firmware secara remote.{" "}
                 <span className="text-[#e9ecf0]">
-                  lewat WhatsApp; harga disepakati sebelum device
-                </span>{" "}
-                diserahkan.
+                  Konsultasi dulu via WhatsApp; harga disepakati sebelum eksekusi.
+                </span>
               </p>
 
               <div className="hero-reveal hero-reveal-3 mt-9 flex flex-col gap-3.5 sm:flex-row sm:items-center">
@@ -253,6 +252,40 @@ export default async function Home() {
                     </div>
                   </Link>
                 ))}
+              </div>
+              {/* Hub Tautan Internal: Spesialis Merek & Diagnosa Cepat */}
+              <div className="mt-8 flex flex-col gap-4 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)]/80 p-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-2">
+                  <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+                    Spesialis Merek Android
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {BRAND_PROFILES.map((brand) => (
+                      <Link
+                        key={brand.slug}
+                        href={`/merek/${brand.slug}`}
+                        className="rounded-full border border-[var(--color-border)] bg-white px-3 py-1 text-xs font-medium text-[var(--color-primary)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-secondary)]"
+                      >
+                        {brand.shortName}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex shrink-0 flex-wrap items-center gap-2.5">
+                  <Link
+                    href="/diagnosa"
+                    className="inline-flex items-center gap-1.5 rounded-[var(--radius)] bg-[var(--color-primary)] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[var(--color-secondary)]"
+                  >
+                    <span>Diagnosa Cepat 30 Detik</span>
+                    <IconArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                  <Link
+                    href="/cek-servis"
+                    className="inline-flex items-center gap-1.5 rounded-[var(--radius)] border border-[var(--color-border)] bg-white px-3.5 py-2 text-xs font-semibold text-[var(--color-primary)] transition-colors hover:bg-[#F1F4F6]"
+                  >
+                    <span>Cek Status Servis</span>
+                  </Link>
+                </div>
               </div>
             </div>
           </section>
@@ -433,7 +466,7 @@ export default async function Home() {
         )}
 
         {/* Pertanyaan Umum (selaras 1:1 dengan JSON-LD FAQPage) */}
-        <section aria-labelledby="faq-heading">
+        <section id="faq" aria-labelledby="faq-heading" className="scroll-mt-20">
           <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-8 px-4 py-14 lg:grid-cols-12 lg:px-8">
             <div className="lg:col-span-4">
               <h2

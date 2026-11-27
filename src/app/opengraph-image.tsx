@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "TechFixSoftware — Jasa Servis Software Android Remote & Rangkasbitung";
+export const alt = "TechFixSoftware — Jasa Root, Unbrick, Fix Bootloop & Custom ROM Android";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -100,9 +100,9 @@ export default function OpenGraphImage() {
               flexWrap: "wrap",
             }}
           >
-            <span>Servis Software&nbsp;</span>
-            <span style={{ color: "#34d399" }}>Android,</span>
-            <span>&nbsp;Tanpa Perlu ke Toko.</span>
+            <span>Jasa Root, Unbrick &amp;&nbsp;</span>
+            <span style={{ color: "#34d399" }}>Fix Bootloop</span>
+            <span>&nbsp;Android.</span>
           </div>
           <div style={{ fontSize: "24px", color: "#cbd5e1", lineHeight: 1.45 }}>
             Fix Bootloop · Unbrick EDL 9008 · Flash Firmware · Root Magisk/KernelSU · Custom ROM ·

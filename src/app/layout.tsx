@@ -32,8 +32,8 @@ const monoFont = IBM_Plex_Mono({
 });
 
 const DESCRIPTION =
-  "Spesialis servis software Android: bootloop, brick, stuck logo, root, flashing, dan downgrade. Konsultasi langsung via WhatsApp.";
-const TITLE = "TechFixSoftware — Layanan Servis Software Android";
+  "Jasa root Android (Magisk/KernelSU), unbrick EDL 9008, fix bootloop, custom ROM & flash firmware secara remote se-Indonesia. Konsultasi WA, mulai Rp50.000.";
+const TITLE = "Jasa Root, Unbrick & Fix Bootloop Android — TechFixSoftware";
 
 export const metadata: Metadata = {
   // Prasyarat canonical, OG image, dan JSON-LD agar URL-nya absolut.
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
     title: TITLE,
     description: DESCRIPTION,
   },
-  twitter: { card: "summary", title: TITLE, description: DESCRIPTION },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION },
 };
 
 /** Ubah nomor WhatsApp tersimpan (62…) jadi format E.164. */
@@ -125,6 +125,22 @@ export default async function RootLayout({
         priceRange: "Rp50.000+",
         currenciesAccepted: "IDR",
         paymentAccepted: "Bank Transfer, QRIS, E-Wallet",
+        openingHoursSpecification: [
+          {
+            "@type": "OpeningHoursSpecification",
+            dayOfWeek: [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday",
+            ],
+            opens: "08:00",
+            closes: "22:00",
+          },
+        ],
         knowsAbout: [
           "Jasa Servis Software Android",
           "Flash Firmware Android",

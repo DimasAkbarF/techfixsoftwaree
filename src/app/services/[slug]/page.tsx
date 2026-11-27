@@ -36,6 +36,18 @@ export async function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
 }
 
+// Judul exact-match (<=60 karakter) agar selaras dengan kueri pencari jasa tanpa terpotong di SERP.
+const SERVICE_SEO_TITLES: Record<string, string> = {
+  "root-android": "Jasa Root Android Remote (Magisk/KernelSU) — TechFixSoftware",
+  unbrick: "Jasa Unbrick Android EDL 9008 & Mati Total — TechFixSoftware",
+  "custom-rom": "Jasa Pasang Custom ROM Android Online — TechFixSoftware",
+  "fix-bootloop": "Jasa Fix Bootloop & Stuck Logo Android — TechFixSoftware",
+  "unlock-bootloader": "Jasa Unlock Bootloader (UBL) Android — TechFixSoftware",
+  "flash-firmware": "Jasa Flash Firmware Android Resmi Remote — TechFixSoftware",
+  recovery: "Jasa Pasang TWRP & OrangeFox Android — TechFixSoftware",
+  "software-repair": "Jasa Perbaikan Software Android Remote — TechFixSoftware",
+};
+
 // Tanpa ini semua halaman layanan mewarisi title/description root yang sama.
 export async function generateMetadata({
   params,
@@ -48,7 +60,7 @@ export async function generateMetadata({
   if (!service) return {};
 
   return pageSeo({
-    title: `${service.name} — TechFixSoftware`,
+    title: SERVICE_SEO_TITLES[service.slug] ?? `Jasa ${service.name} Android — TechFixSoftware`,
     description: clip(leadParagraph(service.description)),
     path: `/services/${service.slug}`,
   });
