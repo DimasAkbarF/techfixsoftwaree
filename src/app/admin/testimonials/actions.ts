@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdminSession } from "@/lib/admin-auth";
 import { z } from "zod";
+import { isSafeMediaUrl } from "@/lib/safe-url";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { PUBLIC_CACHE_TAGS } from "@/lib/public-data";
 import { ADMIN_CACHE_TAGS, getCachedAdminTestimonials } from "@/lib/admin-data";
@@ -12,7 +13,13 @@ const testimonialInputSchema = z.object({
   deviceType: z.string().trim().min(2, "Tipe perangkat minimal 2 karakter"),
   review: z.string().trim().min(5, "Ulasan minimal 5 karakter"),
   rating: z.number().int().min(1, "Rating minimal 1").max(5, "Rating maksimal 5"),
-  imageUrl: z.string().trim().max(500).nullable().optional(),
+  imageUrl: z
+    .string()
+    .trim()
+    .max(500)
+    .refine(isSafeMediaUrl, "URL gambar harus berupa path lokal (/...) atau HTTPS valid")
+    .nullable()
+    .optional(),
   isPublished: z.boolean().default(false),
 });
 

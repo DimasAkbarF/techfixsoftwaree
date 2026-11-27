@@ -139,13 +139,15 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // 2. If serviceId provided, verify it exists (optional)
+  // 2. If serviceId provided, verify it exists so tampered IDs cannot trigger FK 500
   let serviceName = "";
+  let validServiceId: string | null = null;
   if (serviceId) {
     try {
       const s = await prisma.service.findUnique({ where: { id: serviceId } });
       if (s) {
         serviceName = s.name;
+        validServiceId = s.id;
       }
     } catch {
       // ignore
@@ -175,7 +177,7 @@ export async function POST(request: NextRequest) {
           phone: normalizedPhone,
           deviceType,
           complaint,
-          serviceId: serviceId || null,
+          serviceId: validServiceId,
           status: "NEW",
         },
       });

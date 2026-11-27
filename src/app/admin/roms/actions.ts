@@ -3,13 +3,17 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdminSession } from "@/lib/admin-auth";
 import { z } from "zod";
+import { isSafeMediaUrl } from "@/lib/safe-url";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { PUBLIC_CACHE_TAGS } from "@/lib/public-data";
 import { ADMIN_CACHE_TAGS, getCachedAdminRoms } from "@/lib/admin-data";
 
 const romInputSchema = z.object({
   name: z.string().min(2, "Nama ROM minimal 2 karakter"),
-  logoUrl: z.string().min(1, "Logo ROM wajib diunggah"),
+  logoUrl: z
+    .string()
+    .min(1, "Logo ROM wajib diunggah")
+    .refine(isSafeMediaUrl, "URL logo harus berupa path lokal (/...) atau HTTPS valid"),
   sortOrder: z.number().int().default(0),
   isPublished: z.boolean().default(true),
 });

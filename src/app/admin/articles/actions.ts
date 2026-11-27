@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdminSession } from "@/lib/admin-auth";
 import { z } from "zod";
+import { isSafeMediaUrl } from "@/lib/safe-url";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { PUBLIC_CACHE_TAGS } from "@/lib/public-data";
 import { ADMIN_CACHE_TAGS, getCachedAdminArticles } from "@/lib/admin-data";
@@ -15,7 +16,11 @@ const articleInputSchema = z.object({
     .min(3, "Slug minimal 3 karakter")
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug hanya boleh berisi huruf kecil, angka, dan tanda hubung (-)"),
   content: z.string().min(10, "Konten artikel minimal 10 karakter"),
-  coverImageUrl: z.string().optional().nullable(),
+  coverImageUrl: z
+    .string()
+    .refine(isSafeMediaUrl, "URL gambar harus berupa path lokal (/...) atau HTTPS valid")
+    .optional()
+    .nullable(),
   metaTitle: z.string().optional().nullable(),
   metaDescription: z.string().optional().nullable(),
   status: z.nativeEnum(ContentStatus).default("DRAFT"),

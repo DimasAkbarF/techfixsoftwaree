@@ -64,6 +64,22 @@ const nextConfig: NextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
           },
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: blob: https://utfs.io https://*.ufs.sh https://*.uploadthing.com",
+              "font-src 'self' data:",
+              "connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com https://uploadthing.com https://*.uploadthing.com https://*.ingest.uploadthing.com https://*.ufs.sh",
+              "frame-ancestors 'none'",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "upgrade-insecure-requests",
+            ].join("; "),
+          },
         ],
       },
       {
