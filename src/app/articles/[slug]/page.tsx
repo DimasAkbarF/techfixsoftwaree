@@ -11,6 +11,7 @@ import { pickRelatedArticles, pickRelatedServicesForArticle } from "@/lib/relate
 import { Button } from "@/components/ui/button";
 import { PublicHeader } from "@/components/public/public-header";
 import { PublicFooter } from "@/components/public/public-footer";
+import { ArticleShare } from "@/components/public/article-share";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumb, clip, pageSeo, SITE_NAME } from "@/lib/seo";
 import { SITE_AUTHOR, SITE_URL } from "@/lib/site";
@@ -19,6 +20,7 @@ import {
   IconArrowRight,
   IconChevronRight,
   IconCalendar,
+  IconClock,
   IconMessageCircle,
   IconUser,
 } from "@tabler/icons-react";
@@ -69,6 +71,19 @@ function formatTanggal(date: Date | string) {
   });
 }
 
+function estimateReadingMinutes(content: string) {
+  const words = content.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / 200));
+}
+
+function slugifyHeading(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-");
+}
+
 export default async function ArticleDetailPage({
   params,
 }: {
@@ -87,6 +102,21 @@ export default async function ArticleDetailPage({
   }
 
   const blocks = parseArticleBlocks(article.content);
+  const readingMinutes = estimateReadingMinutes(article.content);
+  const seenIds = new Map<string, number>();
+  const h2IdByBlockIndex = new Map<number, string>();
+  const tocItems: Array<{ id: string; text: string }> = [];
+
+  blocks.forEach((block, index) => {
+    if (block.type !== "h2") return;
+    const base = slugifyHeading(block.text) || `bagian-${index + 1}`;
+    const count = (seenIds.get(base) ?? 0) + 1;
+    seenIds.set(base, count);
+    const id = count === 1 ? base : `${base}-${count}`;
+    h2IdByBlockIndex.set(index, id);
+    tocItems.push({ id, text: block.text });
+  });
+
   const relatedServices = pickRelatedServicesForArticle(article, allServices, 2);
   const relatedArticles = pickRelatedArticles(article, allArticles, 3);
 
@@ -125,24 +155,24 @@ export default async function ArticleDetailPage({
 
       <section className="page-header">
         <div className="relative z-[1] mx-auto max-w-[800px] px-4 py-8">
-          <nav className="mb-5 flex items-center gap-2 text-xs text-[var(--color-muted)]">
-            <Link href="/" className="hover:text-[var(--color-primary)] hover:underline">
+          <nav className="mb-5 flex items-center gap-2 text-xs text-white/65">
+            <Link href="/" className="hover:text-white hover:underline">
               Beranda
             </Link>
-            <IconChevronRight className="h-3.5 w-3.5 text-[var(--color-muted)]/60" />
-            <Link href="/articles" className="hover:text-[var(--color-primary)] hover:underline">
+            <IconChevronRight className="h-3.5 w-3.5 text-white/40" />
+            <Link href="/articles" className="hover:text-white hover:underline">
               Artikel
             </Link>
-            <IconChevronRight className="h-3.5 w-3.5 text-[var(--color-muted)]/60" />
-            <span className="max-w-[200px] truncate font-medium text-[var(--color-primary)] sm:max-w-none">
+            <IconChevronRight className="h-3.5 w-3.5 text-white/40" />
+            <span className="max-w-[200px] truncate font-medium text-white sm:max-w-none">
               {article.title}
             </span>
           </nav>
 
           <header className="space-y-3">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-[var(--color-muted)]">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-white/70">
               <span className="inline-flex items-center gap-2">
-                <IconCalendar className="h-4 w-4 text-[var(--color-accent)]" />
+                <IconCalendar className="h-4 w-4 text-[#34d399]" />
                 {publishedTime ? (
                   <time dateTime={publishedTime.toISOString()}>
                     {formatTanggal(publishedTime)}
@@ -158,11 +188,15 @@ export default async function ArticleDetailPage({
                 </span>
               )}
               <span className="inline-flex items-center gap-2">
-                <IconUser className="h-4 w-4 text-[var(--color-accent)]" />
+                <IconClock className="h-4 w-4 text-[#34d399]" />
+                {readingMinutes} menit baca
+              </span>
+              <span className="inline-flex items-center gap-2">
+                <IconUser className="h-4 w-4 text-[#34d399]" />
                 Ditulis &amp; Ditinjau oleh: {SITE_AUTHOR.name} — {SITE_AUTHOR.role}
               </span>
             </div>
-            <h1 className="font-heading text-3xl font-bold leading-tight tracking-tight text-[var(--color-primary)] sm:text-4xl">
+            <h1 className="font-heading text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
               {article.title}
             </h1>
           </header>
@@ -188,6 +222,33 @@ export default async function ArticleDetailPage({
             </div>
           )}
 
+          {/* Daftar Isi otomatis untuk artikel dengan >= 2 subjudul H2 */}
+          {tocItems.length >= 2 && (
+            <nav
+              aria-label="Daftar isi artikel"
+              className="rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)]/85 p-5"
+            >
+              <p className="font-mono text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
+                Daftar Isi
+              </p>
+              <ol className="mt-3 space-y-1.5 text-sm">
+                {tocItems.map((item, idx) => (
+                  <li key={item.id}>
+                    <a
+                      href={`#${item.id}`}
+                      className="inline-flex items-baseline gap-2 text-[var(--color-primary)] hover:text-[var(--color-accent)] hover:underline"
+                    >
+                      <span className="font-mono text-xs text-[var(--color-muted)]">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      <span>{item.text}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )}
+
           {/* Konten Artikel Terstruktur (H2 / H3 / UL / P untuk Google & Answer Engine) */}
           <div className="space-y-4 font-sans text-base leading-relaxed text-[var(--color-fg)]">
             {blocks.map((block, index) => {
@@ -195,7 +256,8 @@ export default async function ArticleDetailPage({
                 return (
                   <h2
                     key={index}
-                    className="pt-4 font-heading text-xl sm:text-2xl font-bold tracking-tight text-[var(--color-primary)]"
+                    id={h2IdByBlockIndex.get(index)}
+                    className="scroll-mt-24 pt-4 font-heading text-xl sm:text-2xl font-bold tracking-tight text-[var(--color-primary)]"
                   >
                     {block.text}
                   </h2>
@@ -223,6 +285,9 @@ export default async function ArticleDetailPage({
               return <p key={index}>{block.text}</p>;
             })}
           </div>
+
+          {/* Tombol Bagikan Artikel */}
+          <ArticleShare title={article.title} url={articleUrl} />
 
           {/* Tautan Layanan Terkait & Consultation CTA */}
           <section className="mt-12 p-6 border border-[var(--color-border)] bg-[var(--color-surface)]/85 rounded-[var(--radius)] space-y-4">

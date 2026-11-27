@@ -3,6 +3,11 @@ import Link from "next/link";
 import { getPublishedArticles } from "@/lib/public-data";
 import { PublicHeader } from "@/components/public/public-header";
 import { PublicFooter } from "@/components/public/public-footer";
+import {
+  ArticleCatalog,
+  type ArticleCatalogItem,
+  type ArticleTopic,
+} from "@/components/public/article-catalog";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumb, pageSeo } from "@/lib/seo";
@@ -34,8 +39,31 @@ function ringkasan(content: string) {
   return flat.length > 140 ? flat.slice(0, 140).replace(/\s+\S*$/, "") : flat;
 }
 
+function classifyTopic(title: string, slug: string): ArticleTopic {
+  const text = `${title} ${slug}`.toLowerCase();
+  if (/(root|magisk|kernelsu|ubl|bootloader|play integrity|safetynet)/.test(text)) {
+    return "Root & UBL";
+  }
+  if (/(bootloop|brick|unbrick|edl|9008|mati total|fastboot|stuck)/.test(text)) {
+    return "Bootloop & Unbrick";
+  }
+  if (/(custom rom|twrp|orangefox|recovery|lineage|pixelos|crdroid|evolution)/.test(text)) {
+    return "Custom ROM & Recovery";
+  }
+  return "Firmware & Partisi";
+}
+
 export default async function ArticlesPublicPage() {
   const articles = await getPublishedArticles();
+  const catalogItems: ArticleCatalogItem[] = articles.map((article) => ({
+    id: article.id,
+    slug: article.slug,
+    title: article.title,
+    summary: ringkasan(article.content),
+    coverImageUrl: article.coverImageUrl,
+    publishedLabel: tanggal(article.publishedAt),
+    topic: classifyTopic(article.title, article.slug),
+  }));
 
   return (
     <div className="page-canvas min-h-screen">
@@ -43,10 +71,10 @@ export default async function ArticlesPublicPage() {
 
       <section className="page-header">
         <div className="relative z-[1] mx-auto max-w-[1200px] px-4 py-10">
-          <h1 className="font-heading text-3xl font-bold tracking-tight text-[var(--color-primary)]">
+          <h1 className="font-heading text-3xl font-bold tracking-tight text-white">
             Artikel & Panduan Servis Android
           </h1>
-          <p className="mt-2 max-w-2xl text-base text-[var(--color-muted)]">
+          <p className="mt-2 max-w-2xl text-base text-white/75">
             Informasi teknis seputar penyebab bootloop, cara penanganan brick, dan edukasi software perangkat Android.
           </p>
         </div>
@@ -76,42 +104,7 @@ export default async function ArticlesPublicPage() {
             </Link>
           </div>
         ) : (
-          /* Grid editorial: 2 kolom di ponsel/tablet, 3 kolom di laptop. Tanpa kartu berbingkai. */
-          <div className="grid grid-cols-2 gap-x-5 gap-y-9 sm:gap-x-6 lg:grid-cols-3 lg:gap-x-8">
-            {articles.map((article) => (
-              <article key={article.id} className="border-t border-[var(--color-border)] pt-4">
-                <Link href={`/articles/${article.slug}`} prefetch={true} className="group flex flex-col gap-2.5">
-                  {article.coverImageUrl && (
-                    <div className="mb-1 aspect-[16/9] overflow-hidden rounded-[var(--radius)] border border-[var(--color-border)] bg-[#F9FAFB]">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={article.coverImageUrl}
-                        alt={article.title}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                  )}
-
-                  <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--color-muted)]">
-                    {tanggal(article.publishedAt)}
-                  </span>
-
-                  <h2 className="font-heading text-sm sm:text-base lg:text-lg font-bold leading-snug text-[var(--color-primary)] line-clamp-3 group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4">
-                    {article.title}
-                  </h2>
-
-                  {/* line-clamp butuh display -webkit-box; sembunyikan lewat wrapper agar clamp tidak batal. */}
-                  <div className="hidden sm:block">
-                    <p className="text-sm leading-relaxed text-[var(--color-muted)] line-clamp-2">
-                      {ringkasan(article.content)}
-                    </p>
-                  </div>
-                </Link>
-              </article>
-            ))}
-          </div>
+          <ArticleCatalog articles={catalogItems} />
         )}
       </main>
 
