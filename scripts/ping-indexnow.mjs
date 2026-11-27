@@ -1,5 +1,5 @@
 // Ping semua URL dari sitemap.xml ke Bing / IndexNow setelah deploy selesai.
-const SITE_HOST = "www.techfixsoftware.web.id";
+const SITE_HOST = "techfixsoftware.web.id";
 const SITE_URL = `https://${SITE_HOST}`;
 const KEY = "7c4e9b2a1f8d4e6c9a3b5d7f0e2a4c68";
 
