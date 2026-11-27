@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert } from "@/components/ui/alert";
-import { IconBrandAndroid, IconLock, IconLoader2 } from "@tabler/icons-react";
+import { IconLock, IconLoader2 } from "@tabler/icons-react";
+import { BrandLogo } from "@/components/brand-logo";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = React.useState("");
@@ -57,9 +58,7 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center px-4">
       <div className="w-full max-w-sm border border-[var(--color-border)] bg-[var(--color-surface)] p-8 rounded-[var(--radius)] shadow-xs">
         <div className="flex flex-col items-center mb-6">
-          <div className="w-12 h-12 rounded-[var(--radius)] bg-[var(--color-primary)] flex items-center justify-center text-white mb-3">
-            <IconBrandAndroid className="w-7 h-7 text-[var(--color-accent)]" />
-          </div>
+          <BrandLogo className="h-10 mb-4" priority />
           <h1 className="font-heading text-xl font-bold tracking-tight text-[var(--color-primary)]">
             Admin TechFixSoftware
           </h1>

@@ -20,6 +20,9 @@ function buildTrustedOrigins() {
       : undefined,
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    ...(process.env.NODE_ENV !== "production"
+      ? ["http://localhost:*", "http://127.0.0.1:*"]
+      : []),
   ];
   const origins = new Set<string>();
   for (const raw of candidates) {
