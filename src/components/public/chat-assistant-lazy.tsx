@@ -8,6 +8,6 @@ const ChatAssistant = dynamic(
   { ssr: false }
 );
 
-export function ChatAssistantLazy() {
-  return <ChatAssistant />;
+export function ChatAssistantLazy({ whatsappNumber }: { whatsappNumber?: string | null }) {
+  return <ChatAssistant whatsappNumber={whatsappNumber} />;
 }

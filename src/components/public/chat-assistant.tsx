@@ -13,6 +13,7 @@ import {
   type AssistantLink,
   type AssistantReply,
 } from "@/lib/assistant";
+import { normalizePhone } from "@/lib/phone";
 
 interface ChatItem {
   id: string;
@@ -37,7 +38,15 @@ function wait(ms: number) {
   });
 }
 
-export function ChatAssistant() {
+export function ChatAssistant({ whatsappNumber }: { whatsappNumber?: string | null }) {
+  const cleanWa = whatsappNumber?.trim() ? normalizePhone(whatsappNumber) : "";
+  const directWhatsappUrl =
+    cleanWa.length >= 10
+      ? `https://wa.me/${cleanWa}?text=${encodeURIComponent(
+          "Halo TechFixSoftware, saya ingin konsultasi servis software Android."
+        )}`
+      : null;
+
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
@@ -356,8 +365,20 @@ export function ChatAssistant() {
         </section>
       )}
 
-      {/* Floating launcher button */}
-      <div className="flex justify-end">
+      {/* Floating launcher stack: Ikon WhatsApp di atas tombol Asisten Chat */}
+      <div className="flex flex-col items-end gap-2.5">
+        {!open && directWhatsappUrl && (
+          <a
+            href={directWhatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Chat WhatsApp"
+            aria-label="Chat WhatsApp TechFixSoftware"
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-[#15803D] text-white shadow-[0_10px_28px_rgba(21,128,61,0.38)] transition-all duration-150 hover:scale-[1.03] hover:bg-[#166534] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#34d399] focus-visible:ring-offset-2 sm:h-14 sm:w-14"
+          >
+            <IconBrandWhatsapp className="h-6 w-6 shrink-0" stroke={1.9} />
+          </a>
+        )}
         <button
           ref={launcherRef}
           type="button"
@@ -365,7 +386,7 @@ export function ChatAssistant() {
           aria-expanded={open}
           aria-controls="tfs-chat-panel"
           aria-label={open ? "Tutup asisten TechFixSoftware" : "Buka asisten TechFixSoftware"}
-          className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-2xl bg-[image:var(--cta-gradient)] text-[#041a14] shadow-[0_10px_28px_rgba(16,185,129,0.36)] transition-transform duration-150 hover:scale-[1.03] hover:brightness-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2"
+          className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-2xl bg-[image:var(--cta-gradient)] text-[#041a14] shadow-[0_10px_28px_rgba(16,185,129,0.36)] transition-transform duration-150 hover:scale-[1.03] hover:brightness-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 sm:h-14 sm:w-14"
         >
           {open ? (
             <IconX className="h-6 w-6" stroke={2.25} />
