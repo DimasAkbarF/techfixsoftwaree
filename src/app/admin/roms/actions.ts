@@ -5,6 +5,7 @@ import { requireAdminSession } from "@/lib/admin-auth";
 import { z } from "zod";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { PUBLIC_CACHE_TAGS } from "@/lib/public-data";
+import { ADMIN_CACHE_TAGS, getCachedAdminRoms } from "@/lib/admin-data";
 
 const romInputSchema = z.object({
   name: z.string().min(2, "Nama ROM minimal 2 karakter"),
@@ -15,14 +16,7 @@ const romInputSchema = z.object({
 
 export async function getAdminRoms() {
   await requireAdminSession();
-  try {
-    return await prisma.rom.findMany({
-      orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
-    });
-  } catch (err) {
-    console.error("Error fetching roms:", err);
-    return [];
-  }
+  return getCachedAdminRoms();
 }
 
 export async function getAdminRomById(id: string) {
@@ -64,6 +58,7 @@ export async function createRomAction(formData: FormData) {
     revalidatePath("/admin/roms");
     revalidatePath("/");
     revalidateTag(PUBLIC_CACHE_TAGS.roms);
+    revalidateTag(ADMIN_CACHE_TAGS.roms);
 
     return { success: true, data: created };
   } catch (err: unknown) {
@@ -96,6 +91,7 @@ export async function updateRomAction(id: string, formData: FormData) {
     revalidatePath(`/admin/roms/${id}/edit`);
     revalidatePath("/");
     revalidateTag(PUBLIC_CACHE_TAGS.roms);
+    revalidateTag(ADMIN_CACHE_TAGS.roms);
 
     return { success: true, data: updated };
   } catch (err: unknown) {
@@ -117,6 +113,7 @@ export async function deleteRomAction(id: string) {
     revalidatePath("/admin/roms");
     revalidatePath("/");
     revalidateTag(PUBLIC_CACHE_TAGS.roms);
+    revalidateTag(ADMIN_CACHE_TAGS.roms);
 
     return { success: true };
   } catch (err: unknown) {

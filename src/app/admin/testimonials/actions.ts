@@ -5,6 +5,7 @@ import { requireAdminSession } from "@/lib/admin-auth";
 import { z } from "zod";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { PUBLIC_CACHE_TAGS } from "@/lib/public-data";
+import { ADMIN_CACHE_TAGS, getCachedAdminTestimonials } from "@/lib/admin-data";
 
 const testimonialInputSchema = z.object({
   customerName: z.string().trim().min(2, "Nama pelanggan minimal 2 karakter"),
@@ -19,22 +20,7 @@ export type TestimonialFormData = z.infer<typeof testimonialInputSchema>;
 
 export async function getAdminTestimonials() {
   await requireAdminSession();
-  try {
-    return await prisma.testimonial.findMany({
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        customerName: true,
-        deviceType: true,
-        review: true,
-        rating: true,
-        isPublished: true,
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching admin testimonials:", error);
-    return [];
-  }
+  return getCachedAdminTestimonials();
 }
 
 export async function getAdminTestimonialById(id: string) {
@@ -87,6 +73,8 @@ export async function createTestimonialAction(formData: FormData) {
     revalidatePath("/testimonials");
     revalidatePath("/");
     revalidateTag(PUBLIC_CACHE_TAGS.testimonials);
+    revalidateTag(ADMIN_CACHE_TAGS.testimonials);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
 
     return { success: true, data: created };
   } catch (error) {
@@ -138,6 +126,8 @@ export async function updateTestimonialAction(id: string, formData: FormData) {
     revalidatePath("/testimonials");
     revalidatePath("/");
     revalidateTag(PUBLIC_CACHE_TAGS.testimonials);
+    revalidateTag(ADMIN_CACHE_TAGS.testimonials);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
 
     return { success: true, data: updated };
   } catch (error) {
@@ -161,6 +151,8 @@ export async function deleteTestimonialAction(id: string) {
     revalidatePath("/testimonials");
     revalidatePath("/");
     revalidateTag(PUBLIC_CACHE_TAGS.testimonials);
+    revalidateTag(ADMIN_CACHE_TAGS.testimonials);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
 
     return { success: true };
   } catch (error) {

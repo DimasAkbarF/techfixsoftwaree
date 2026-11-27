@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { PUBLIC_CACHE_TAGS } from "@/lib/public-data";
+import { ADMIN_CACHE_TAGS } from "@/lib/admin-data";
 import { getAdminSession } from "@/lib/admin-auth";
 import { z } from "zod";
 
@@ -69,6 +72,10 @@ export async function PATCH(
       data: validation.data,
     });
 
+    revalidateTag(PUBLIC_CACHE_TAGS.testimonials);
+    revalidateTag(ADMIN_CACHE_TAGS.testimonials);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
+
     return NextResponse.json({
       success: true,
       data: updated,
@@ -112,6 +119,10 @@ export async function DELETE(
     await prisma.testimonial.delete({
       where: { id },
     });
+
+    revalidateTag(PUBLIC_CACHE_TAGS.testimonials);
+    revalidateTag(ADMIN_CACHE_TAGS.testimonials);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
 
     return NextResponse.json({ success: true });
   } catch (error) {

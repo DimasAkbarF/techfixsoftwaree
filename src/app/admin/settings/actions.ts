@@ -5,6 +5,7 @@ import { requireAdminSession } from "@/lib/admin-auth";
 import { z } from "zod";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { PUBLIC_CACHE_TAGS } from "@/lib/public-data";
+import { ADMIN_CACHE_TAGS, getCachedAdminSiteSetting } from "@/lib/admin-data";
 
 const siteSettingSchema = z.object({
   brandName: z.string().min(1, "Nama brand wajib diisi").default("TechFixSoftware"),
@@ -22,32 +23,8 @@ export type SiteSettingData = {
 };
 
 export async function getSiteSetting(): Promise<SiteSettingData> {
-  try {
-    const setting = await prisma.siteSetting.findUnique({
-      where: { id: "singleton" },
-    });
-
-    if (!setting) {
-      return {
-        id: "singleton",
-        brandName: "TechFixSoftware",
-        logoUrl: null,
-        whatsappNumber: null,
-        minPriceLabel: "mulai dari Rp50.000",
-      };
-    }
-
-    return setting;
-  } catch (error) {
-    console.error("Error fetching site settings:", error);
-    return {
-      id: "singleton",
-      brandName: "TechFixSoftware",
-      logoUrl: null,
-      whatsappNumber: null,
-      minPriceLabel: "mulai dari Rp50.000",
-    };
-  }
+  await requireAdminSession();
+  return getCachedAdminSiteSetting();
 }
 
 export async function updateSiteSetting(formData: FormData) {
@@ -106,6 +83,7 @@ export async function updateSiteSetting(formData: FormData) {
     revalidatePath("/");
     revalidatePath("/services");
     revalidateTag(PUBLIC_CACHE_TAGS.settings);
+    revalidateTag(ADMIN_CACHE_TAGS.settings);
 
     return {
       success: true,

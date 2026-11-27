@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { ADMIN_CACHE_TAGS } from "@/lib/admin-data";
 import { z } from "zod";
 import { isValidWhatsappNumber, normalizePhone } from "@/lib/phone";
 import { notifyNewLead } from "@/lib/notify-lead";
@@ -193,8 +195,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // 4. Notifikasi admin (best-effort, dilewati bila duplikat 60 detik)
+  // 4. Notifikasi admin & invalidasi cache dashboard/leads (best-effort, dilewati bila duplikat 60 detik)
   if (!isDuplicate) {
+    revalidateTag(ADMIN_CACHE_TAGS.leads);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
     await notifyNewLead({
       id: lead.id,
       name: lead.name,

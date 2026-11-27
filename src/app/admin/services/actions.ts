@@ -5,6 +5,7 @@ import { requireAdminSession } from "@/lib/admin-auth";
 import { z } from "zod";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { PUBLIC_CACHE_TAGS } from "@/lib/public-data";
+import { ADMIN_CACHE_TAGS, getCachedAdminServices } from "@/lib/admin-data";
 
 const serviceInputSchema = z.object({
   name: z.string().min(2, "Nama layanan minimal 2 karakter"),
@@ -26,24 +27,7 @@ export type ServiceFormData = z.infer<typeof serviceInputSchema>;
 
 export async function getAdminServices() {
   await requireAdminSession();
-  try {
-    return await prisma.service.findMany({
-      orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        category: true,
-        priceFromLabel: true,
-        icon: true,
-        sortOrder: true,
-        isPublished: true,
-      },
-    });
-  } catch (err) {
-    console.error("Error fetching services:", err);
-    return [];
-  }
+  return getCachedAdminServices();
 }
 
 export async function getAdminServiceById(id: string) {
@@ -137,6 +121,8 @@ export async function createServiceAction(formData: FormData) {
     revalidatePath("/services");
     revalidatePath("/");
     revalidateTag(PUBLIC_CACHE_TAGS.services);
+    revalidateTag(ADMIN_CACHE_TAGS.services);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
 
     return {
       success: true,
@@ -235,6 +221,8 @@ export async function updateServiceAction(id: string, formData: FormData) {
     revalidatePath(`/services/${updated.slug}`);
     revalidatePath("/");
     revalidateTag(PUBLIC_CACHE_TAGS.services);
+    revalidateTag(ADMIN_CACHE_TAGS.services);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
 
     return {
       success: true,
@@ -265,6 +253,8 @@ export async function deleteServiceAction(id: string) {
     revalidatePath("/services");
     revalidatePath("/");
     revalidateTag(PUBLIC_CACHE_TAGS.services);
+    revalidateTag(ADMIN_CACHE_TAGS.services);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
 
     return { success: true };
   } catch (err: unknown) {

@@ -3,8 +3,9 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdminSession } from "@/lib/admin-auth";
 import { LeadStatus, Prisma } from "@prisma/client";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { formatRupiah } from "@/lib/phone";
+import { ADMIN_CACHE_TAGS, getCachedAdminLeads } from "@/lib/admin-data";
 
 const leadInclude = {
   service: { select: { id: true, name: true, slug: true } },
@@ -23,23 +24,7 @@ function formatFollowUp(date: Date) {
 
 export async function getAdminLeads(status?: string) {
   await requireAdminSession();
-
-  try {
-    const whereClause: { status?: LeadStatus } = {};
-    if (status && Object.values(LeadStatus).includes(status as LeadStatus)) {
-      whereClause.status = status as LeadStatus;
-    }
-
-    return await prisma.lead.findMany({
-      where: whereClause,
-      orderBy: { createdAt: "desc" },
-      take: 100,
-      include: leadInclude,
-    });
-  } catch (error) {
-    console.error("Error in getAdminLeads:", error);
-    return [];
-  }
+  return getCachedAdminLeads(status);
 }
 
 export async function updateLeadStatusAndNote(
@@ -141,6 +126,8 @@ export async function updateLeadStatusAndNote(
 
     revalidatePath("/admin/leads");
     revalidatePath("/admin");
+    revalidateTag(ADMIN_CACHE_TAGS.leads);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
 
     return { success: true, data: updated };
   } catch (err: unknown) {
@@ -159,6 +146,8 @@ export async function deleteLead(id: string) {
     await prisma.lead.delete({ where: { id } });
     revalidatePath("/admin/leads");
     revalidatePath("/admin");
+    revalidateTag(ADMIN_CACHE_TAGS.leads);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
     return { success: true };
   } catch (error) {
     console.error("Error deleting lead:", error);

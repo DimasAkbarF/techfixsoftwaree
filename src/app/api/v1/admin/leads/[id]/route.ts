@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { ADMIN_CACHE_TAGS } from "@/lib/admin-data";
 import { getAdminSession } from "@/lib/admin-auth";
 import { z } from "zod";
 import { LeadStatus, Prisma } from "@prisma/client";
@@ -189,6 +191,9 @@ export async function PATCH(
       include: leadInclude,
     });
 
+    revalidateTag(ADMIN_CACHE_TAGS.leads);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
+
     return NextResponse.json({
       success: true,
       data: updated,
@@ -230,6 +235,8 @@ export async function DELETE(
 
   try {
     await prisma.lead.delete({ where: { id } });
+    revalidateTag(ADMIN_CACHE_TAGS.leads);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
     return NextResponse.json({ success: true, data: { id } });
   } catch (error) {
     console.error("Error deleting lead:", error);

@@ -5,6 +5,7 @@ import { requireAdminSession } from "@/lib/admin-auth";
 import { z } from "zod";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { PUBLIC_CACHE_TAGS } from "@/lib/public-data";
+import { ADMIN_CACHE_TAGS, getCachedAdminArticles } from "@/lib/admin-data";
 import { ContentStatus } from "@prisma/client";
 
 const articleInputSchema = z.object({
@@ -24,21 +25,7 @@ export type ArticleFormData = z.infer<typeof articleInputSchema>;
 
 export async function getAdminArticles() {
   await requireAdminSession();
-  try {
-    return await prisma.article.findMany({
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        status: true,
-        publishedAt: true,
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching admin articles:", error);
-    return [];
-  }
+  return getCachedAdminArticles();
 }
 
 export async function getAdminArticleById(id: string) {
@@ -118,6 +105,8 @@ export async function createArticleAction(formData: FormData) {
     revalidatePath("/articles");
     revalidatePath("/");
     revalidateTag(PUBLIC_CACHE_TAGS.articles);
+    revalidateTag(ADMIN_CACHE_TAGS.articles);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
 
     return { success: true, data: created };
   } catch (error) {
@@ -215,6 +204,8 @@ export async function updateArticleAction(id: string, formData: FormData) {
     revalidatePath(`/articles/${updated.slug}`);
     revalidatePath("/");
     revalidateTag(PUBLIC_CACHE_TAGS.articles);
+    revalidateTag(ADMIN_CACHE_TAGS.articles);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
 
     return { success: true, data: updated };
   } catch (error) {
@@ -238,6 +229,8 @@ export async function deleteArticleAction(id: string) {
     revalidatePath("/articles");
     revalidatePath("/");
     revalidateTag(PUBLIC_CACHE_TAGS.articles);
+    revalidateTag(ADMIN_CACHE_TAGS.articles);
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard);
 
     return { success: true };
   } catch (error) {
