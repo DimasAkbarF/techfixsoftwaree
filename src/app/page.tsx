@@ -156,6 +156,7 @@ export default async function Home() {
                 </a>
                 <Link
                   href="/services"
+                  prefetch={true}
                   className="inline-flex h-[52px] items-center justify-center rounded-[14px] border-[1.5px] border-white/85 bg-transparent px-6 text-[15px] font-semibold text-white transition-colors hover:bg-white/10"
                 >
                   Lihat katalog layanan
@@ -225,6 +226,7 @@ export default async function Home() {
                   <Link
                     key={service.id}
                     href={`/services/${service.slug}`}
+                    prefetch={true}
                     className="group grid grid-cols-1 gap-3 py-5 transition-colors hover:bg-[#0B1220]/[0.035] md:grid-cols-[1fr_auto] md:items-center md:gap-8"
                   >
                     <div className="flex items-start gap-4">
@@ -419,6 +421,7 @@ export default async function Home() {
                   <Link
                     key={article.id}
                     href={`/articles/${article.slug}`}
+                    prefetch={true}
                     className="group flex flex-col gap-1 py-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8"
                   >
                     <h3 className="font-heading text-base font-semibold text-[var(--color-primary)] group-hover:underline">

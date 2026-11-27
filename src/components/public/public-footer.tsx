@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { IconArrowRight, IconMessageExclamation } from "@tabler/icons-react";
 import { BrandLogo } from "@/components/brand-logo";
-import { ChatAssistant } from "@/components/public/chat-assistant";
+import { ChatAssistantLazy } from "@/components/public/chat-assistant-lazy";
 
 const SITE_NAV = [
   { href: "/", label: "Beranda" },
@@ -93,7 +93,7 @@ export function PublicFooter() {
           <p>&copy; {new Date().getFullYear()} TechFixSoftware. Harga final disepakati via WhatsApp.</p>
         </div>
       </div>
-      <ChatAssistant />
+      <ChatAssistantLazy />
     </footer>
   );
 }

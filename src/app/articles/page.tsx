@@ -80,7 +80,7 @@ export default async function ArticlesPublicPage() {
           <div className="grid grid-cols-2 gap-x-5 gap-y-9 sm:gap-x-6 lg:grid-cols-3 lg:gap-x-8">
             {articles.map((article) => (
               <article key={article.id} className="border-t border-[var(--color-border)] pt-4">
-                <Link href={`/articles/${article.slug}`} className="group flex flex-col gap-2.5">
+                <Link href={`/articles/${article.slug}`} prefetch={true} className="group flex flex-col gap-2.5">
                   {article.coverImageUrl && (
                     <div className="mb-1 aspect-[16/9] overflow-hidden rounded-[var(--radius)] border border-[var(--color-border)] bg-[#F9FAFB]">
                       {/* eslint-disable-next-line @next/next/no-img-element */}

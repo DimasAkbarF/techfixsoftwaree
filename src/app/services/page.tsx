@@ -6,7 +6,7 @@ import { PublicHeader } from "@/components/public/public-header";
 import { PublicFooter } from "@/components/public/public-footer";
 import { ServiceCatalog } from "./service-catalog";
 import { JsonLd } from "@/components/seo/json-ld";
-import { breadcrumb, pageSeo } from "@/lib/seo";
+import { breadcrumb, leadParagraph, pageSeo } from "@/lib/seo";
 import { IconArrowRight } from "@tabler/icons-react";
 
 // ISR: katalog di-cache 5 menit; admin memanggil revalidatePath("/services") saat data berubah.
@@ -20,7 +20,17 @@ export const metadata: Metadata = pageSeo({
 });
 
 export default async function ServicesCatalogPage() {
-  const services = await getPublishedServices();
+  const rawServices = await getPublishedServices();
+  // Kirim hanya field ringkas ke klien agar payload RSC /services sangat kecil.
+  const services = rawServices.map((s) => ({
+    id: s.id,
+    name: s.name,
+    slug: s.slug,
+    category: s.category,
+    summary: leadParagraph(s.description),
+    priceFromLabel: s.priceFromLabel,
+    icon: s.icon,
+  }));
 
   return (
     <div className="page-canvas min-h-screen">

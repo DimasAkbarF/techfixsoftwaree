@@ -3,7 +3,6 @@
 import * as React from "react";
 import Link from "next/link";
 import { ServiceIcon } from "@/components/common/service-icon";
-import { leadParagraph } from "@/lib/seo";
 import { IconArrowRight, IconFilter, IconTool } from "@tabler/icons-react";
 
 interface CatalogService {
@@ -11,7 +10,7 @@ interface CatalogService {
   name: string;
   slug: string;
   category: string;
-  description: string;
+  summary: string;
   priceFromLabel: string;
   icon: string | null;
 }
@@ -58,7 +57,7 @@ export function ServiceList({ services }: { services: CatalogService[] }) {
                 </span>
               </div>
               <p className="text-sm text-[var(--color-muted)] max-w-2xl line-clamp-2">
-                {leadParagraph(service.description)}
+                {service.summary}
               </p>
             </div>
           </div>
@@ -72,7 +71,7 @@ export function ServiceList({ services }: { services: CatalogService[] }) {
                 {service.priceFromLabel}
               </div>
             </div>
-            <Link href={`/services/${service.slug}`} className={outlineLinkClass}>
+            <Link href={`/services/${service.slug}`} prefetch={true} className={outlineLinkClass}>
               <span>Detail &amp; Konsultasi</span>
               <IconArrowRight className="w-4 h-4" />
             </Link>

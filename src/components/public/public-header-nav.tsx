@@ -155,6 +155,7 @@ export function PublicHeaderNav({
       <div className="relative mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4 px-4 lg:h-[clamp(72px,calc(89*(100vw/1456)),96px)] lg:px-8">
         <Link
           href="/"
+          prefetch={true}
           aria-label="TechFixSoftware — Beranda"
           onClick={close}
           className="flex shrink-0 items-center"
@@ -195,6 +196,7 @@ export function PublicHeaderNav({
                     <Link
                       key={service.slug}
                       href={`/services/${service.slug}`}
+                      prefetch={true}
                       className="block px-4 py-2 text-sm text-[var(--color-fg)] hover:bg-[#F1F4F6]"
                     >
                       {service.name}

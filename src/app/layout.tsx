@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import { getPublicSiteSetting } from "@/lib/public-data";
 import { SITE_AUTHOR, SITE_NAME, SITE_URL } from "@/lib/site";
 import { JsonLd } from "@/components/seo/json-ld";
+import { RouteProgress } from "@/components/common/route-progress";
 import "./globals.css";
 
 // Font di-self-host agar tidak ada request render-blocking ke fonts.googleapis.com.
@@ -204,6 +206,9 @@ export default async function RootLayout({
         >
           Lewati ke konten
         </a>
+        <Suspense fallback={null}>
+          <RouteProgress />
+        </Suspense>
         <JsonLd data={organization} />
         {children}
       </body>

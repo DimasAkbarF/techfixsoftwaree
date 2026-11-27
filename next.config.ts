@@ -10,10 +10,10 @@ const nextConfig: NextConfig = {
     // Impor ikon per-simbol, bukan seluruh paket, agar bundle klien kecil.
     optimizePackageImports: ["@tabler/icons-react"],
     inlineCss: true,
-    // Cache Router RSC 60s (dinamis) & 300s (statis/ISR, selaras revalidate=300) agar
+    // Cache Router RSC 120s (dinamis) & 300s (statis/ISR, selaras revalidate=300) agar
     // perpindahan halaman di browser berlangsung ~5-20ms dari memori tanpa tunggu jaringan.
     staleTimes: {
-      dynamic: 60,
+      dynamic: 120,
       static: 300,
     },
   },
