@@ -16,9 +16,9 @@ import {
 export const revalidate = 300;
 
 export const metadata: Metadata = pageSeo({
-  title: `Tentang ${SITE_NAME} — Layanan Servis Software Android`,
+  title: `Tentang Kami — ${SITE_NAME}`,
   description:
-    "Profil TechFixSoftware dan Dimas Akbar: servis software Android remote seluruh Indonesia serta tatap muka di Rangkasbitung dan Jabodetabek (menyesuaikan lokasi + tambahan biaya ongkir).",
+    "Profil TechFixSoftware dan Dimas Akbar: spesialis servis software Android remote se-Indonesia yang transparan dan aman.",
   path: "/tentang",
 });
 

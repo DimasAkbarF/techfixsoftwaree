@@ -9,9 +9,9 @@ import { breadcrumb, pageSeo } from "@/lib/seo";
 export const revalidate = 300;
 
 export const metadata: Metadata = pageSeo({
-  title: "Diagnosa Cepat Kendala HP Android — TechFixSoftware",
+  title: "Diagnosa Cepat — TechFixSoftware",
   description:
-    "Cek kendala software Android Anda dalam 3 langkah: bootloop, hardbrick EDL 9008, stuck fastboot, root Magisk/KernelSU, atau custom ROM. Dapatkan rekomendasi layanan & estimasi awal.",
+    "Cek gejala HP Android Anda dalam 3 klik untuk rekomendasi layanan, estimasi risiko data, dan panduan persiapan sebelum konsultasi.",
   path: "/diagnosa",
 });
 
@@ -20,7 +20,7 @@ export default async function DiagnosaPage() {
 
   return (
     <div className="page-canvas min-h-screen">
-      <PublicHeader />
+      <PublicHeader active="diagnosa" />
 
       <section className="page-header">
         <div className="relative z-[1] mx-auto max-w-[1200px] px-4 py-10 lg:px-8">

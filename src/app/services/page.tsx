@@ -13,9 +13,9 @@ import { IconArrowRight } from "@tabler/icons-react";
 export const revalidate = 300;
 
 export const metadata: Metadata = pageSeo({
-  title: "Layanan Servis Software Android — TechFixSoftware",
+  title: "Layanan — TechFixSoftware",
   description:
-    "Root, unlock bootloader, fix bootloop, unbrick, flash firmware, custom ROM, recovery, dan perbaikan software. Konsultasi WhatsApp, harga disepakati dulu.",
+    "Katalog jasa servis software Android: root Magisk/KernelSU, unbrick EDL 9008, fix bootloop, custom ROM, UBL, dan flash firmware.",
   path: "/services",
 });
 

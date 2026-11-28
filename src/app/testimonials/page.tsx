@@ -19,9 +19,9 @@ import {
 export const revalidate = 300;
 
 export const metadata: Metadata = pageSeo({
-  title: "Testimoni & Bukti Servis — TechFixSoftware",
+  title: "Testimoni — TechFixSoftware",
   description:
-    "Dokumentasi kasus dan bukti servis perangkat Android yang ditangani TechFixSoftware, diambil dari tangkapan layar pelanggan.",
+    "Bukti dokumentasi keberhasilan pengerjaan dan ulasan pelanggan servis software Android yang ditangani oleh TechFixSoftware.",
   path: "/testimonials",
 });
 

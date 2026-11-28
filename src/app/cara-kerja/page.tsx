@@ -11,9 +11,9 @@ import { IconArrowRight } from "@tabler/icons-react";
 export const revalidate = 300;
 
 export const metadata: Metadata = pageSeo({
-  title: "Cara Kerja Layanan — TechFixSoftware",
+  title: "Cara Kerja — TechFixSoftware",
   description:
-    "Empat langkah servis software Android: konsultasi WhatsApp, kesepakatan harga, perjanjian, lalu penyerahan device.",
+    "Alur servis software Android remote via AnyDesk/USB ke seluruh Indonesia dan tatap muka di Rangkasbitung dalam 4 tahap jelas.",
   path: "/cara-kerja",
 });
 

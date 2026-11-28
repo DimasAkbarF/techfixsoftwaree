@@ -217,6 +217,26 @@ export default async function RootLayout({
           "Custom Recovery",
         ],
       },
+      {
+        "@type": "SiteNavigationElement",
+        "@id": `${SITE_URL}/#navigation`,
+        name: [
+          "Layanan",
+          "Diagnosa Cepat",
+          "Cara Kerja",
+          "Cek Status Servis",
+          "Testimoni",
+          "Tentang Kami",
+        ],
+        url: [
+          `${SITE_URL}/services`,
+          `${SITE_URL}/diagnosa`,
+          `${SITE_URL}/cara-kerja`,
+          `${SITE_URL}/cek-servis`,
+          `${SITE_URL}/testimonials`,
+          `${SITE_URL}/tentang`,
+        ],
+      },
     ],
   };
 

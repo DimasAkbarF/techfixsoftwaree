@@ -11,9 +11,9 @@ import { breadcrumb, pageSeo } from "@/lib/seo";
 export const revalidate = 300;
 
 export const metadata: Metadata = pageSeo({
-  title: "Cek Status Servis Android — TechFixSoftware",
+  title: "Cek Status Servis — TechFixSoftware",
   description:
-    "Pantau progres pengerjaan servis software Android Anda secara real-time menggunakan kode tiket dan 4 digit terakhir nomor WhatsApp.",
+    "Pantau progres pengerjaan tiket servis software Android Anda secara real-time dengan kode tiket dan 4 digit terakhir nomor WA.",
   path: "/cek-servis",
 });
 
@@ -22,7 +22,7 @@ export default async function CekServisPage() {
 
   return (
     <div className="page-canvas min-h-screen">
-      <PublicHeader />
+      <PublicHeader active="cek-servis" />
 
       <section className="page-header">
         <div className="relative z-[1] mx-auto max-w-[1000px] px-4 py-10">

@@ -9,12 +9,12 @@ export const revalidate = 300;
 const STATIC_PAGES: MetadataRoute.Sitemap = [
   { url: `${SITE_URL}/`, changeFrequency: "weekly", priority: 1 },
   { url: `${SITE_URL}/services`, changeFrequency: "weekly", priority: 0.9 },
-  { url: `${SITE_URL}/diagnosa`, changeFrequency: "monthly", priority: 0.85 },
-  { url: `${SITE_URL}/cek-servis`, changeFrequency: "monthly", priority: 0.7 },
+  { url: `${SITE_URL}/diagnosa`, changeFrequency: "monthly", priority: 0.9 },
+  { url: `${SITE_URL}/cara-kerja`, changeFrequency: "monthly", priority: 0.85 },
+  { url: `${SITE_URL}/cek-servis`, changeFrequency: "monthly", priority: 0.85 },
+  { url: `${SITE_URL}/testimonials`, changeFrequency: "weekly", priority: 0.85 },
+  { url: `${SITE_URL}/tentang`, changeFrequency: "monthly", priority: 0.85 },
   { url: `${SITE_URL}/articles`, changeFrequency: "weekly", priority: 0.8 },
-  { url: `${SITE_URL}/cara-kerja`, changeFrequency: "monthly", priority: 0.7 },
-  { url: `${SITE_URL}/tentang`, changeFrequency: "monthly", priority: 0.7 },
-  { url: `${SITE_URL}/testimonials`, changeFrequency: "weekly", priority: 0.6 },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

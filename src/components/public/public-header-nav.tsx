@@ -15,6 +15,8 @@ import { BrandLogo } from "@/components/brand-logo";
 const NAV = [
   { href: "/", label: "Beranda", key: "beranda" },
   { href: "/services", label: "Layanan", key: "katalog" },
+  { href: "/diagnosa", label: "Diagnosa", key: "diagnosa" },
+  { href: "/cek-servis", label: "Cek Servis", key: "cek-servis" },
   { href: "/articles", label: "Artikel", key: "artikel" },
   { href: "/testimonials", label: "Testimoni", key: "testimoni" },
 ] as const;
@@ -310,6 +312,24 @@ export function PublicHeaderNav({
                   <span>Layanan</span>
                 </Link>
               )}
+
+              <Link
+                href="/diagnosa"
+                onClick={close}
+                aria-current={active === "diagnosa" ? "page" : undefined}
+                className={fullscreenItem(active === "diagnosa")}
+              >
+                <span>Diagnosa</span>
+              </Link>
+
+              <Link
+                href="/cek-servis"
+                onClick={close}
+                aria-current={active === "cek-servis" ? "page" : undefined}
+                className={fullscreenItem(active === "cek-servis")}
+              >
+                <span>Cek Servis</span>
+              </Link>
 
               <Link
                 href="/cara-kerja"
