@@ -73,11 +73,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/icons/icon-48x48.png", sizes: "48x48", type: "image/png" },
-      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icons/icon-48x48.png?v=2", sizes: "48x48", type: "image/png" },
+      { url: "/icons/icon-192x192.png?v=2", sizes: "192x192", type: "image/png" },
     ],
-    shortcut: "/icons/icon-48x48.png",
+    shortcut: "/icons/icon-48x48.png?v=2",
     apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
