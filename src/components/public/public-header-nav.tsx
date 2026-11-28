@@ -43,28 +43,55 @@ export function PublicHeaderNav({
   const toggleRef = useRef<HTMLButtonElement>(null);
 
   // Saat di atas hero gelap, pertahankan tinta terang;
-  // tepat saat .parallax-sheet menyentuh header, beralih ke permukaan terang.
+  // tepat saat .parallax-sheet menyentuh header (<= 80px dari atas), beralih ke permukaan terang.
+  // Menggunakan IntersectionObserver + rAF agar tidak memicu forced reflow pada initial load maupun scroll.
   useEffect(() => {
-    const onScroll = () => {
+    if (!overlay) {
+      setOverDarkZone(false);
+    }
+
+    let rafId = 0;
+    const syncScroll = () => {
+      rafId = 0;
       const y = window.scrollY;
-      setScrolled(y > 8);
-      if (!overlay) {
-        setOverDarkZone(false);
-        return;
-      }
-      const sheet = document.querySelector<HTMLElement>(".parallax-sheet");
-      if (sheet) {
-        setOverDarkZone(sheet.getBoundingClientRect().top > 80);
-      } else {
-        setOverDarkZone(y < window.innerHeight * 0.92);
+      setScrolled((prev) => (prev === (y > 8) ? prev : y > 8));
+      if (overlay && !document.querySelector(".parallax-sheet")) {
+        const nextDark = y < window.innerHeight * 0.92;
+        setOverDarkZone((prev) => (prev === nextDark ? prev : nextDark));
       }
     };
-    onScroll();
+
+    const onScroll = () => {
+      if (!rafId) rafId = window.requestAnimationFrame(syncScroll);
+    };
+
+    if (window.scrollY > 8) {
+      onScroll();
+    }
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
+
+    let observer: IntersectionObserver | null = null;
+    if (overlay) {
+      const sheet = document.querySelector<HTMLElement>(".parallax-sheet");
+      if (sheet && typeof IntersectionObserver !== "undefined") {
+        observer = new IntersectionObserver(
+          (entries) => {
+            const entry = entries[0];
+            if (!entry) return;
+            const nextDark = entry.boundingClientRect.top > 80;
+            setOverDarkZone((prev) => (prev === nextDark ? prev : nextDark));
+          },
+          { rootMargin: "-80px 0px 0px 0px", threshold: 0 }
+        );
+        observer.observe(sheet);
+      }
+    }
+
     return () => {
+      observer?.disconnect();
+      if (rafId) window.cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
     };
   }, [overlay]);
 
