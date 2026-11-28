@@ -17,6 +17,17 @@ const nextConfig: NextConfig = {
       static: 300,
     },
   },
+  webpack(config, { dev, isServer }) {
+    // Next.js 15.5.29 tidak sengaja menyertakan ~217 kB next-devtools (100% unused di production).
+    if (!dev && !isServer) {
+      config.resolve = config.resolve || {};
+      config.resolve.alias = {
+        ...(config.resolve.alias || {}),
+        "next/dist/compiled/next-devtools": false,
+      };
+    }
+    return config;
+  },
   async redirects() {
     return [
       // Pemulihan 100% ranking URL lama yang masih terindeks di Google Search Console
